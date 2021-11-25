@@ -7,12 +7,14 @@ import com.foodapp.awabackend.entities.Account;
 import com.foodapp.awabackend.entities.Order;
 import com.foodapp.awabackend.entities.Product;
 import com.foodapp.awabackend.entities.Restaurant;
+import com.foodapp.awabackend.entities.RestaurantType;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,6 +25,14 @@ public class AwaBackendController {
     
     @GetMapping("/public/restaurants")
     public ResponseEntity<Restaurant> getRestaurants() {
+        return null;
+    }
+
+    @GetMapping("/public/restaurants?id={restaurantId}&name={restaurantName}&type={type}&price={price}")
+    public ResponseEntity<List<Restaurant>> searchRestaurants(
+        @RequestParam long restaurantId, @RequestParam String restaurantName,
+        @RequestParam RestaurantType type, @RequestParam int price
+    ) {
         return null;
     }
 
