@@ -13,7 +13,7 @@ create table users (
 );
 create table restaurants (
     restaurant_id INT NOT NULL PRIMARY KEY DEFAULT NEXTVAL('restaurant_pk_seq'),
-    restaurant_name VARCHAR(50) NOT NULL,
+    restaurant_name VARCHAR(50) UNIQUE NOT NULL,
     manager_name VARCHAR(20) REFERENCES users (user_name),
     address VARCHAR(50) NOT NULL,
     opens VARCHAR(5) NOT NULL,
