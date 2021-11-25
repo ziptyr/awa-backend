@@ -40,3 +40,8 @@ create table orders_products (
     product_price NUMERIC NOT NULL,
     PRIMARY KEY(order_id, product_id)
 );
+
+
+create sequence restaurant_pk_seq;
+create sequence product_pk_seq;
+create sequence order_pk_seq;
