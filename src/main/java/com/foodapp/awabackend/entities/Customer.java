@@ -4,7 +4,7 @@ public class Consumer extends Account {
 
     private String[] address;
 
-    public Consumer(String userName, String[] address) {
+    public Customer(String userName, String[] address) {
         super(userName);
         this.address = address;
     }
