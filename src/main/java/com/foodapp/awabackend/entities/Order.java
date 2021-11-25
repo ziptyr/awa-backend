@@ -24,4 +24,39 @@ public class Order {
         this.shoppingCart = shoppingCart;
     }
 
+    public int getRestaurantId() {
+        return restaurantId;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
+    public ZonedDateTime getOrderDate() {
+        return orderDate;
+    }
+
+    public double getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(double totalPrice) {
+        this.totalPrice = totalPrice;
+    }
+
+    public List<Map<Product, Integer>> getShoppingCart() {
+        return shoppingCart;
+    }
+
+    public void setShoppingCart(List<Map<Product, Integer>> shoppingCart) {
+        this.shoppingCart = shoppingCart;
+    }
 }
