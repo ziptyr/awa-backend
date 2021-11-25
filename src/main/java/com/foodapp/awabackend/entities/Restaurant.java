@@ -3,6 +3,9 @@ package com.foodapp.awabackend.entities;
 import java.time.ZonedDateTime;
 import java.util.List;
 
+import javax.persistence.Entity;
+
+@Entity
 public class Restaurant {
 
     private int restaurantId;
