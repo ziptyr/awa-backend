@@ -1,4 +1,6 @@
-
+create sequence restaurant_pk_seq;
+create sequence product_pk_seq;
+create sequence order_pk_seq;
 create table users (
     user_name VARCHAR(50) NOT NULL PRIMARY KEY,
     address VARCHAR(50) NOT NULL,
@@ -6,7 +8,7 @@ create table users (
     password_hash VARCHAR(50) NOT NULL
 );
 create table restaurants (
-    restaurant_id INT NOT NULL PRIMARY KEY,
+    restaurant_id INT NOT NULL PRIMARY KEY DEFAULT NEXTVAL('restaurant_pk_seq'),
     restaurant_name VARCHAR(50) NOT NULL,
     manager_name VARCHAR(20) REFERENCES users (user_name),
     address VARCHAR(50) NOT NULL,
@@ -17,7 +19,7 @@ create table restaurants (
     image VARCHAR(100) NOT NULL
 );
 create table products (
-    product_id INT NOT NULL PRIMARY KEY,
+    product_id INT NOT NULL PRIMARY KEY DEFAULT NEXTVAL('product_pk_seq'),
     restaurant_id INT REFERENCES restaurants (restaurant_id),
     product_name VARCHAR(50) NOT NULL,
     description VARCHAR(255),
@@ -26,7 +28,7 @@ create table products (
     categories VARCHAR(100)
 );
 create table orders (
-    order_id INT NOT NULL PRIMARY KEY,
+    order_id INT NOT NULL PRIMARY KEY DEFAULT NEXTVAL('product_pk_seq'),
     restaurant_id INT REFERENCES restaurants (restaurant_id),
     user_name VARCHAR(50) REFERENCES users (user_name),
     order_status SMALLINT NOT NULL,
@@ -42,6 +44,4 @@ create table orders_products (
 );
 
 
-create sequence restaurant_pk_seq;
-create sequence product_pk_seq;
-create sequence order_pk_seq;
+

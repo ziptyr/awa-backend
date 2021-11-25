@@ -1,5 +1,5 @@
 INSERT INTO restaurants (restaurant_id, restaurant_name, manager_name, address, opens, closes, price_level, type, image) VALUES (
-    'abcdef',
+    1,
     'best burgers',
     'lucas',
     'sargans',
@@ -10,7 +10,7 @@ INSERT INTO restaurants (restaurant_id, restaurant_name, manager_name, address, 
     '/image/path'
 );
 INSERT INTO restaurants (restaurant_id, restaurant_name, manager_name, address, opens, closes, price_level, type, image) VALUES (
-    'poihgfd',
+    2,
     'even better burgers',
     'lucas',
     'sargans',
