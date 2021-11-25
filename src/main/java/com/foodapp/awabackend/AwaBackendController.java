@@ -1,14 +1,18 @@
 package com.foodapp.awabackend;
 
 import java.util.List;
+import java.util.Map;
 
+import com.foodapp.awabackend.entities.Account;
 import com.foodapp.awabackend.entities.Order;
 import com.foodapp.awabackend.entities.Product;
 import com.foodapp.awabackend.entities.Restaurant;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,17 +27,19 @@ public class AwaBackendController {
     }
 
     @PutMapping("/customer/orders/confirm")
-    public ResponseEntity<String> confirmOrder() {
+    public ResponseEntity<String> confirmOrder(@RequestBody int status) {
         return null;
     }
 
     @PostMapping("/public/users")
-    public ResponseEntity<String> createUser() {
+    public ResponseEntity<String> createUser(@RequestBody Account newUser) {
         return null;
     }
 
     @PutMapping("/manager/restaurants/orders/{orderId}")
-    public ResponseEntity<String> updateOrderStatus() {
+    public ResponseEntity<String> updateOrderStatus(
+        @PathVariable long orderId, @RequestBody int status
+    ) {
         return null;
     }
 
@@ -43,12 +49,12 @@ public class AwaBackendController {
     }
 
     @GetMapping("/public/restaurants/{restaurantId}/menu")
-    public ResponseEntity<List<Product>> getMenu() {
+    public ResponseEntity<List<Product>> getMenu(@PathVariable long restaurantId) {
         return null;
     }
 
     @PostMapping("/public/users/login")
-    public ResponseEntity<String> login() {
+    public ResponseEntity<String> login(@RequestBody Map<String, String> userInfo) {
         return null;
     }
 
@@ -58,32 +64,34 @@ public class AwaBackendController {
     }
 
     @GetMapping("/customer/orders/{orderId}")
-    public ResponseEntity<Order> getOrder() {
+    public ResponseEntity<Order> getOrder(@PathVariable long orderId) {
         return null;
     }
 
     @PostMapping("/manager/restaurants/{restaurantId}/products")
-    public ResponseEntity<String> createProduct() {
+    public ResponseEntity<String> createProduct(
+        @PathVariable long restaurantId, @RequestBody Product newProduct
+    ) {
         return null;
     }
 
     @PostMapping("/manager/restaurants")
-    public ResponseEntity<String> createRestaurant() {
+    public ResponseEntity<String> createRestaurant(@RequestBody Restaurant newRestaurant) {
         return null;
     }
 
     @GetMapping("/manager/restaurants/{restaurantId}/orders/new")
-    public ResponseEntity<List<Order>> getNewOrders() {
+    public ResponseEntity<List<Order>> getNewOrders(@PathVariable long restaurantId) {
         return null;
     }
 
     @GetMapping("/manager/restaurant/orders/{orderId}")
-    public ResponseEntity<Order> getOrderAsManager() {
+    public ResponseEntity<Order> getOrderAsManager(@PathVariable long orderId) {
         return null;
     }
 
     @GetMapping("/manager/restaurants/{restaurantId}/orders")
-    public ResponseEntity<List<Order>> getRestaurantsOrders() {
+    public ResponseEntity<List<Order>> getRestaurantsOrders(@PathVariable long restaurantId) {
         return null;
     }
 }
