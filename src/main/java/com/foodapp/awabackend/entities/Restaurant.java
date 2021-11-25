@@ -11,7 +11,7 @@ public class Restaurant {
     private int restaurantId;
     private String restaurantName;
     private String managerName;
-    private String address;
+    private String[] address;
     private ZonedDateTime opens;
     private ZonedDateTime closes;
     private String image;
@@ -20,16 +20,18 @@ public class Restaurant {
     private List<Product> menu;
 
     public Restaurant(
-        String restaurantName, String address, ZonedDateTime opens, ZonedDateTime closes,
-        String image, RestaurantType type, int priceLevel)
+        String restaurantName, String managerName, String[] address, ZonedDateTime opens,
+        ZonedDateTime closes, String image, RestaurantType type, int priceLevel, List<Product> menu)
     {
         this.restaurantName = restaurantName;
+        this.managerName = managerName;
         this.address = address;
         this.opens = opens;
         this.closes = closes;
         this.image = image;
         this.type = type;
         this.priceLevel = priceLevel;
+        this.menu = menu;
     }
 
     public int getRestaurantId() {
@@ -48,11 +50,11 @@ public class Restaurant {
         return managerName;
     }
 
-    public String getAddress() {
+    public String[] getAddress() {
         return address;
     }
 
-    public void setAddress(String address) {
+    public void setAddress(String[] address) {
         this.address = address;
     }
 
