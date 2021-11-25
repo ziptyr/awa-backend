@@ -24,6 +24,10 @@ public class Order {
         this.shoppingCart = shoppingCart;
     }
 
+    public long getOrderId() {
+        return orderId;
+    }
+
     public int getRestaurantId() {
         return restaurantId;
     }
