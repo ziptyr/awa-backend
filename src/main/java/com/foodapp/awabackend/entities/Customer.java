@@ -1,6 +1,6 @@
 package com.foodapp.awabackend.entities;
 
-public class Consumer extends Account {
+public class Customer extends Account {
 
     private String[] address;
 
