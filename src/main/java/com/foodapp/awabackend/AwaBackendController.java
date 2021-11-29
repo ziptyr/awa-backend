@@ -56,10 +56,10 @@ public class AwaBackendController {
     }
 
     @GetMapping("/public/restaurants/{restaurantId}/menu")
-    // public ResponseEntity<List<Object[]>> getMenu(@PathVariable long restaurantId) {
-    public ResponseEntity<Product[]> getMenu(@PathVariable long restaurantId) {
-        // List<Object[]> menu = restaurantRepo.getMenuFromId(restaurantId);
-        Product[] menu = restaurantRepo.getMenuFromId(restaurantId);
+    public ResponseEntity<List<Object[]>> getMenu(@PathVariable long restaurantId) {
+    // public ResponseEntity<Product[]> getMenu(@PathVariable long restaurantId) {
+        List<Object[]> menu = restaurantRepo.getMenuFromId(restaurantId);
+        // Product[] menu = restaurantRepo.getMenuFromId(restaurantId);
         return new ResponseEntity<>(menu, HttpStatus.OK);
     }
     @GetMapping("/public/users")
@@ -84,7 +84,8 @@ public class AwaBackendController {
 
     @GetMapping("/customer/orders")
     public ResponseEntity<List<Order>> getOrders() {
-        return null;
+        List<Order> res = orderRepo.getOrdersByUsername("moritz");
+        return new ResponseEntity<List<Order>>(res, HttpStatus.OK);
     }
 
     @GetMapping("/customer/orders/{orderId}")

@@ -17,6 +17,17 @@ public class Order {
     @Id
     @Column(name = "order_id")
     public long orderId;
+    @Column(name = "restaurant_id")
+    public String restaurantId;
+    @Column(name = "user_name")
+    public String username;
+    @Column(name = "order_status")
+    public int orderStatus;
+    @Column(name = "order_date")
+    public String orderDate;
+    @Column(name = "total")
+    public double total;
+    
     // @OneToMany
     // // public Set<Map<Product, Integer>> products;
     // public Set<Product> products;
