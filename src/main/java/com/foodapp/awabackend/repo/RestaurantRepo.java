@@ -17,6 +17,7 @@ public interface RestaurantRepo extends JpaRepository<Restaurant, Long>{
     final String getMenuQuery = "select * from products where restaurant_id =?";
 
     @Query(value = getMenuQuery, nativeQuery = true)
-    List<Object[]> getMenuFromId(long restaurantId);
+    // List<Object[]> getMenuFromId(long restaurantId);
+    Product[] getMenuFromId(long restaurantId);
     
 }

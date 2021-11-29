@@ -6,6 +6,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.GeneratedValue;
 
 @Entity
 @Table(name = "products")
@@ -13,6 +14,7 @@ public class Product {
 
     @Id
     @Column(name = "product_id")
+    @GeneratedValue
     public long productId;
     @Column(name = "restaurant_id")
     public long restaurantId;
@@ -32,7 +34,7 @@ public class Product {
     @Column(name = "categories")
     public String category;
 
-    public Product(){}
+    // public Product(){}
 
     public Product(long productId, long restaurantId, String name, String description, double price, String image,
             String category) {
