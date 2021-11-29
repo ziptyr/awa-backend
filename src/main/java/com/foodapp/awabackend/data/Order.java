@@ -1,12 +1,9 @@
 package com.foodapp.awabackend.data;
 
-import java.util.Map;
-import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 
@@ -28,9 +25,6 @@ public class Order {
     @Column(name = "total")
     public double total;
     
-    // @OneToMany
-    // // public Set<Map<Product, Integer>> products;
-    // public Set<Product> products;
 
     public Order(){}
 }

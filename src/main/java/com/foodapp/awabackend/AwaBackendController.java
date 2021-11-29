@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import com.foodapp.awabackend.entities.Account;
 import com.foodapp.awabackend.entities.RestaurantType;
@@ -42,23 +43,38 @@ public class AwaBackendController {
     ProductRepo productRepo;
     
     @GetMapping("/public/restaurants")
-    public ResponseEntity<List<Restaurant>> getRestaurants() {
-        List<Restaurant> res = restaurantRepo.findAll();
+    public ResponseEntity<List<Restaurant>> searchRestaurants(
+        @RequestParam Optional<String> restaurantName,
+        @RequestParam Optional<String> type, 
+        @RequestParam Optional<Integer> price,
+        @RequestParam Optional<String> address
+    ) {
+        String name = "";
+        String typeSearch = "";
+        int priceMin = 1;
+        int priceMax = 3;
+        String addr = "%";
+
+        if(restaurantName.isPresent()) name = restaurantName.get();
+        if(type.isPresent()) typeSearch = type.get();
+        if(price.isPresent()) {
+            priceMin = price.get();
+            priceMax = price.get();
+        }
+        if(address.isPresent()) addr = "%"+address.get()+"%";
+
+        List<Restaurant> res = restaurantRepo.search("%"+name+"%","%"+typeSearch+"%", priceMin,priceMax,addr);
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
-
-    @GetMapping("/public/restaurants?id={restaurantId}&name={restaurantName}&type={type}&price={price}")
-    public ResponseEntity<List<Restaurant>> searchRestaurants(
-        @RequestParam long restaurantId, @RequestParam String restaurantName,
-        @RequestParam RestaurantType type, @RequestParam int price
-    ) {
-        return null;
+    @GetMapping("/public/restaurants/{restaurantId}")
+    public ResponseEntity<Restaurant> getRestaurant(@PathVariable long restaurantId) {
+        Restaurant res = restaurantRepo.findById(restaurantId).get();
+        return new ResponseEntity<Restaurant>(res, HttpStatus.OK);
     }
-
     @GetMapping("/public/restaurants/{restaurantId}/menu")
-    public ResponseEntity<List<Object[]>> getMenu(@PathVariable long restaurantId) {
-    // public ResponseEntity<Product[]> getMenu(@PathVariable long restaurantId) {
-        List<Object[]> menu = restaurantRepo.getMenuFromId(restaurantId);
+    // public ResponseEntity<List<Object[]>> getMenu(@PathVariable long restaurantId) {
+    public ResponseEntity<List<Product>> getMenu(@PathVariable long restaurantId) {
+        List<Product> menu = productRepo.getMenuFromId(restaurantId);
         // Product[] menu = restaurantRepo.getMenuFromId(restaurantId);
         return new ResponseEntity<>(menu, HttpStatus.OK);
     }

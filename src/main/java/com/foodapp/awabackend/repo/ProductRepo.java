@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 public interface ProductRepo extends JpaRepository<Product, Long>{
     
 
-    final String getMenuQuery = "select * from products where restaurant_id =?";
+    final String getMenuQuery = "select * from products where restaurant_id = ?;";
 
     @Query(value = getMenuQuery, nativeQuery = true)
     List<Product> getMenuFromId(long restaurantId);
