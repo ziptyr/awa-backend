@@ -1,25 +1,14 @@
 package com.foodapp.awabackend;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
-import com.foodapp.awabackend.repo.OrderProductsRepo;
-import com.foodapp.awabackend.repo.OrderRepo;
-import com.foodapp.awabackend.repo.ProductRepo;
-import com.foodapp.awabackend.repo.RestaurantRepo;
-import com.foodapp.awabackend.repo.UserRepo;
-import com.foodapp.awabackend.data.Restaurant;
-import com.foodapp.awabackend.data.User;
 import com.foodapp.awabackend.entities.Account;
-import com.foodapp.awabackend.data.Order;
-import com.foodapp.awabackend.data.OrderProductRelation;
-import com.foodapp.awabackend.data.Product;
+import com.foodapp.awabackend.entities.Order;
+import com.foodapp.awabackend.entities.Product;
+import com.foodapp.awabackend.entities.Restaurant;
+import com.foodapp.awabackend.entities.RestaurantType;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,57 +22,23 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 @RestController
 public class AwaBackendController {
-
-    @Autowired
-    UserRepo userRepo;
-    @Autowired
-    RestaurantRepo restaurantRepo;
-    @Autowired 
-    OrderRepo orderRepo;
-    @Autowired 
-    ProductRepo productRepo;
-    @Autowired
-    OrderProductsRepo orderProductRepo;
-
+    
     @GetMapping("/public/restaurants")
+    public ResponseEntity<Restaurant> getRestaurants() {
+        return null;
+    }
+
+    @GetMapping("/public/restaurants?id={restaurantId}&name={restaurantName}&type={type}&price={price}")
     public ResponseEntity<List<Restaurant>> searchRestaurants(
-        @RequestParam Optional<String> restaurantName,
-        @RequestParam Optional<String> type, 
-        @RequestParam Optional<Integer> price,
-        @RequestParam Optional<String> address
+        @RequestParam long restaurantId, @RequestParam String restaurantName,
+        @RequestParam RestaurantType type, @RequestParam int price
     ) {
-        String name = "";
-        String typeSearch = "";
-        int priceMin = 1;
-        int priceMax = 3;
-        String addr = "%";
-
-        if(restaurantName.isPresent()) name = restaurantName.get();
-        if(type.isPresent()) typeSearch = type.get();
-        if(price.isPresent()) {
-            priceMin = price.get();
-            priceMax = price.get();
-        }
-        if(address.isPresent()) addr = "%"+address.get()+"%";
-
-        List<Restaurant> res = restaurantRepo.search("%"+name+"%","%"+typeSearch+"%", priceMin,priceMax,addr);
-        return new ResponseEntity<>(res, HttpStatus.OK);
+        return null;
     }
-    @GetMapping("/public/restaurants/{restaurantId}")
-    public ResponseEntity<Restaurant> getRestaurant(@PathVariable long restaurantId) {
-        Restaurant res = restaurantRepo.findById(restaurantId).get();
-        return new ResponseEntity<Restaurant>(res, HttpStatus.OK);
-    }
+
     @GetMapping("/public/restaurants/{restaurantId}/menu")
-    // public ResponseEntity<List<Object[]>> getMenu(@PathVariable long restaurantId) {
     public ResponseEntity<List<Product>> getMenu(@PathVariable long restaurantId) {
-        List<Product> menu = productRepo.getMenuFromId(restaurantId);
-        // Product[] menu = restaurantRepo.getMenuFromId(restaurantId);
-        return new ResponseEntity<>(menu, HttpStatus.OK);
-    }
-    @GetMapping("/public/users")
-    public List<User> getUsers() {
-        return userRepo.findAll();
+        return null;
     }
 
     @PostMapping("/public/users")
@@ -103,16 +58,12 @@ public class AwaBackendController {
 
     @GetMapping("/customer/orders")
     public ResponseEntity<List<Order>> getOrders() {
-        List<Order> res = orderRepo.getOrdersByUsername("moritz");
-        return new ResponseEntity<List<Order>>(res, HttpStatus.OK);
+        return null;
     }
 
     @GetMapping("/customer/orders/{orderId}")
-    public ResponseEntity<Map<String,Object>> getOrder(@PathVariable long orderId) {
-        Map<String,Object> order = new HashMap<>();
-        order.put("details", orderRepo.getOrderById(orderId));
-        order.put("products", orderProductRepo.findAll());
-        return new ResponseEntity<>(order, HttpStatus.OK);
+    public ResponseEntity<Order> getOrder(@PathVariable long orderId) {
+        return null;
     }
 
     @PutMapping("/customer/orders/confirm")
