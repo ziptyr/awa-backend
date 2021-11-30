@@ -1,13 +1,10 @@
 package com.foodapp.awabackend;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import com.foodapp.awabackend.entities.Account;
-import com.foodapp.awabackend.entities.RestaurantType;
 import com.foodapp.awabackend.repo.OrderRepo;
 import com.foodapp.awabackend.repo.ProductRepo;
 import com.foodapp.awabackend.repo.RestaurantRepo;
@@ -16,6 +13,7 @@ import com.foodapp.awabackend.data.Restaurant;
 import com.foodapp.awabackend.data.User;
 import com.foodapp.awabackend.data.Order;
 import com.foodapp.awabackend.data.Product;
+import com.foodapp.awabackend.data.Cart;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -41,6 +39,7 @@ public class AwaBackendController {
     OrderRepo orderRepo;
     @Autowired 
     ProductRepo productRepo;
+
     
     @GetMapping("/public/restaurants")
     public ResponseEntity<List<Restaurant>> searchRestaurants(
@@ -72,10 +71,8 @@ public class AwaBackendController {
         return new ResponseEntity<Restaurant>(res, HttpStatus.OK);
     }
     @GetMapping("/public/restaurants/{restaurantId}/menu")
-    // public ResponseEntity<List<Object[]>> getMenu(@PathVariable long restaurantId) {
     public ResponseEntity<List<Product>> getMenu(@PathVariable long restaurantId) {
         List<Product> menu = productRepo.getMenuFromId(restaurantId);
-        // Product[] menu = restaurantRepo.getMenuFromId(restaurantId);
         return new ResponseEntity<>(menu, HttpStatus.OK);
     }
     @GetMapping("/public/users")
@@ -84,18 +81,52 @@ public class AwaBackendController {
     }
 
     @PostMapping("/public/users")
-    public ResponseEntity<String> createUser(@RequestBody Account newUser) {
-        return null;
+    public HttpStatus createUser(@RequestBody User newUser) {
+        try {
+            // newUser.setPasswordHash(encoder.encode(newUser.getPasswordHash()));
+        } catch (Exception e){
+            return HttpStatus.INTERNAL_SERVER_ERROR;
+        }
+        //////////////////////////////////////
+        // Password should be salted and hashed before inserting the user
+        // But for that to work, authentication must first be implemented.
+        //////////////////////////////////////
+        userRepo.save(newUser);
+        return HttpStatus.CREATED;
     }
 
+    //////////////////////////////////////
+    // This might get handled by Spring security allready
+    //////////////////////////////////////
     @PostMapping("/public/users/login")
     public ResponseEntity<String> login(@RequestBody Map<String, String> userInfo) {
         return null;
     }
 
+
+    //////////////////////////////////////
+    // The following routes need to allways 
+    // check if the user calling the route
+    // is allowed to perform the actions.
+    // Some routes need to know which
+    // user is calling the route.
+    // For that, security with jwt must work!
+    //////////////////////////////////////
+
     @PostMapping("/customer/buy")
-    public ResponseEntity<String> buyCart() {
-        return null;
+    public HttpStatus buyCart(
+        @RequestBody Map<Long, Integer> list
+    ) {
+        Cart cart = new Cart(list);
+        // username is static for now, should be 
+        // extracted from jwt token.
+        String username = "moritz";
+        boolean success = cart.placeOrder(username, orderRepo, productRepo);
+        if(success) {
+            return HttpStatus.OK;
+        } else {
+            return HttpStatus.INTERNAL_SERVER_ERROR;
+        }
     }
 
     @GetMapping("/customer/orders")
@@ -125,24 +156,32 @@ public class AwaBackendController {
 
     @GetMapping("/manager/restaurants/{restaurantId}/orders")
     public ResponseEntity<List<Order>> getRestaurantsOrders(@PathVariable long restaurantId) {
-        return null;
+        List<Order> orders = orderRepo.getOrdersByRestaurantId(restaurantId);
+        return new ResponseEntity<>(orders, HttpStatus.OK);
     }
 
     @GetMapping("/manager/restaurants/{restaurantId}/orders/new")
     public ResponseEntity<List<Order>> getNewOrders(@PathVariable long restaurantId) {
-        return null;
+        List<Order> orders = orderRepo.getNewOrdersByRestaurantId(restaurantId);
+        return new ResponseEntity<>(orders, HttpStatus.OK);
     }
 
     @PostMapping("/manager/restaurants/{restaurantId}/products")
-    public ResponseEntity<String> createProduct(
+    public HttpStatus createProduct(
         @PathVariable long restaurantId, @RequestBody Product newProduct
     ) {
-        return null;
+        productRepo.save(newProduct);
+        return HttpStatus.CREATED;
     }
 
     @GetMapping("/manager/restaurant/orders/{orderId}")
     public ResponseEntity<Order> getOrderAsManager(@PathVariable long orderId) {
-        return null;
+        Optional<Order> order = orderRepo.findById(orderId);
+        if (order.isPresent()){
+            return new ResponseEntity<>(order.get(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
     }
 
     @PutMapping("/manager/restaurants/orders/{orderId}")

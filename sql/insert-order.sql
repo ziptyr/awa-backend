@@ -9,7 +9,7 @@ VALUES (
     2222,  -- value from select statment above
     1,
     'moritz',
-    1,
+    0,
     current_date,
     0.0
 );

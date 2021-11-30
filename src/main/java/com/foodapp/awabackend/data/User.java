@@ -18,7 +18,7 @@ public class User {
     private String address;
     @Column(name="manager")
     private boolean manager;
-    @JsonIgnore
+    // @JsonIgnore
     @Column(name="password_hash")
     private String passwordHash;
 
