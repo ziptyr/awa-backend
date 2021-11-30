@@ -24,6 +24,8 @@ public class Order {
     public String orderDate;
     @Column(name = "total")
     public double total;
+    @Column(name = "delivery_address")
+    public String deliveryAddress;
     
 
     public Order(){}

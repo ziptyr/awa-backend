@@ -47,12 +47,15 @@ public interface OrderRepo extends JpaRepository<Order, Long>{
     */
 
     final String getNextPrimaryKey = "select nextval('order_pk_seq');";
-    final String createOrder = "insert into orders values (?,?,?,0,current_date,0.0)";
+    final String createOrder = "insert into orders values (?,?,?,0,current_date,0.0,"
+        + " (select address from users where user_name = ?))";
     final String insertOrderProductRelation = "insert into orders_products values("
         + " ?, ?, ?, (select price from products where product_id = ?))";
     final String completeOrderPlacement = "update orders set total = (" 
         + "select sum(amount * product_price) from orders_products"
         + " where order_id = ?) where order_id = ?";
+    final String updateDeliveryAddress = "update orders set delivery_address = ?"
+        + " where order_id = ?";
 
     @Query(value = getNextPrimaryKey, nativeQuery = true)
     public int getNextPrimaryKey();
@@ -60,7 +63,7 @@ public interface OrderRepo extends JpaRepository<Order, Long>{
     @Modifying
     @Transactional
     @Query(value = createOrder, nativeQuery = true)
-    public void createOrder(long pk, long restaurant_id, String username);
+    public void createOrder(long pk, long restaurant_id, String username, String usernameAgain);
 
     @Modifying
     @Transactional
@@ -71,5 +74,10 @@ public interface OrderRepo extends JpaRepository<Order, Long>{
     @Transactional
     @Query(value = completeOrderPlacement, nativeQuery = true)
     public void completeOrderPlacement(long orderId, long orderIdRepeated);
+
+    @Modifying
+    @Transactional
+    @Query(value = updateDeliveryAddress, nativeQuery = true)
+    public void updateDeliveryAddress(String addr, long orderId);
 
 }

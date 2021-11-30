@@ -115,9 +115,10 @@ public class AwaBackendController {
 
     @PostMapping("/customer/buy")
     public HttpStatus buyCart(
-        @RequestBody Map<Long, Integer> list
+        // @RequestBody Map<Long, Integer> list
+        @RequestBody Cart cart
     ) {
-        Cart cart = new Cart(list);
+        // Cart cart = new Cart(list);
         // username is static for now, should be 
         // extracted from jwt token.
         String username = "moritz";
@@ -125,7 +126,7 @@ public class AwaBackendController {
         if(success) {
             return HttpStatus.OK;
         } else {
-            return HttpStatus.INTERNAL_SERVER_ERROR;
+            return HttpStatus.BAD_REQUEST;
         }
     }
 

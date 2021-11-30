@@ -15,11 +15,14 @@ import com.foodapp.awabackend.repo.OrderRepo;
  */
 public class Cart {
 
-    public Map<Long, Integer> list;   
+    public Map<Long, Integer> products;   
+    public Optional<String> deliveryAddress;
 
     public Cart(Map<Long, Integer> list){
-        this.list = list;
+        this.products = list;
     }
+
+    public Cart(){}
 
     public boolean placeOrder(String username, OrderRepo orderRepo, ProductRepo productRepo){
         // Get a primary key for the order_id from the database
@@ -27,11 +30,14 @@ public class Cart {
         long valid = validate(productRepo); // -1 if invalid, otherwise the restaurant_id
         if(valid > -1){
             long restaurant_id = valid;
-            orderRepo.createOrder(order_id, restaurant_id, username);
-            for (Long prod_id : list.keySet()){
-                orderRepo.insertOrderProductRelation(order_id, prod_id, list.get(prod_id), prod_id);
+            orderRepo.createOrder(order_id, restaurant_id, username, username);
+            for (Long prod_id : products.keySet()){
+                orderRepo.insertOrderProductRelation(order_id, prod_id, products.get(prod_id), prod_id);
             }
             orderRepo.completeOrderPlacement(order_id, order_id);
+            if (deliveryAddress.isPresent()){
+                orderRepo.updateDeliveryAddress(deliveryAddress.get(), order_id);
+            }
         } else {
             return false;
         }
@@ -42,7 +48,7 @@ public class Cart {
     private long validate(ProductRepo pr){
         long restaurant_id = -1;
 
-        for(long prod_id : list.keySet()){
+        for(long prod_id : products.keySet()){
             Optional<Product> res = pr.findById(prod_id);
             if(res.isPresent()){
                 long id = res.get().restaurantId;
