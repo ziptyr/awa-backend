@@ -5,13 +5,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import com.foodapp.awabackend.repo.OrderProductsRepo;
 import com.foodapp.awabackend.repo.OrderRepo;
 import com.foodapp.awabackend.repo.ProductRepo;
 import com.foodapp.awabackend.repo.RestaurantRepo;
 import com.foodapp.awabackend.repo.UserRepo;
 import com.foodapp.awabackend.data.Restaurant;
 import com.foodapp.awabackend.data.User;
+import com.foodapp.awabackend.entities.Account;
 import com.foodapp.awabackend.data.Order;
+import com.foodapp.awabackend.data.OrderProductRelation;
 import com.foodapp.awabackend.data.Product;
 import com.foodapp.awabackend.data.Cart;
 
@@ -39,8 +42,9 @@ public class AwaBackendController {
     OrderRepo orderRepo;
     @Autowired 
     ProductRepo productRepo;
+    @Autowired
+    OrderProductsRepo orderProductRepo;
 
-    
     @GetMapping("/public/restaurants")
     public ResponseEntity<List<Restaurant>> searchRestaurants(
         @RequestParam Optional<String> restaurantName,
@@ -138,10 +142,9 @@ public class AwaBackendController {
 
     @GetMapping("/customer/orders/{orderId}")
     public ResponseEntity<Map<String,Object>> getOrder(@PathVariable long orderId) {
-        // Order res = orderRepo.findById(orderId).get();
         Map<String,Object> order = new HashMap<>();
         order.put("details", orderRepo.getOrderById(orderId));
-        order.put("products", orderRepo.getOrderProducts(orderId));
+        order.put("products", orderProductRepo.findAll());
         return new ResponseEntity<>(order, HttpStatus.OK);
     }
 
