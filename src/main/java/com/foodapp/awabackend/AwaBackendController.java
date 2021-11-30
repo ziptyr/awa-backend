@@ -13,7 +13,6 @@ import com.foodapp.awabackend.repo.UserRepo;
 import com.foodapp.awabackend.data.Restaurant;
 import com.foodapp.awabackend.data.User;
 import com.foodapp.awabackend.data.Order;
-import com.foodapp.awabackend.data.OrderProductRelation;
 import com.foodapp.awabackend.data.Product;
 import com.foodapp.awabackend.data.Cart;
 
@@ -176,19 +175,53 @@ public class AwaBackendController {
         return HttpStatus.OK;
     }
 
+    @GetMapping("/manager/restaurants")
+    public ResponseEntity<List<Restaurant>> getManagerRestaurants() {
+        // using static manager name for now, extract from jwt eventually
+        String manager = "lucas";
+        List<Restaurant> restaurants = restaurantRepo.getByManager(manager);
+
+        return new ResponseEntity<>(restaurants, HttpStatus.OK);
+    }
+
     @PostMapping("/manager/restaurants")
-    public ResponseEntity<String> createRestaurant(@RequestBody Restaurant newRestaurant) {
-        return null;
+    public HttpStatus createRestaurant(@RequestBody Restaurant newRestaurant) {
+        // using static manager name for now, extract from jwt eventually
+        String manager = "lucas";
+        // double check restaurant manager name
+        newRestaurant.setManagerName(manager);
+        restaurantRepo.save(newRestaurant);
+
+        return HttpStatus.OK;
     }
 
     @GetMapping("/manager/restaurants/{restaurantId}/orders")
     public ResponseEntity<List<Order>> getRestaurantsOrders(@PathVariable long restaurantId) {
+        // using static manager name for now, extract from jwt eventually
+        String manager = "lucas";
+        // Check if user is manager of restaurantId
+        Optional<Restaurant> restaurant = restaurantRepo.findById(restaurantId);
+        if(restaurant.isEmpty()) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        } else if (restaurant.get().getManagerName().equals(manager)) {
+            return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
+        }
+
         List<Order> orders = orderRepo.getOrdersByRestaurantId(restaurantId);
         return new ResponseEntity<>(orders, HttpStatus.OK);
     }
 
     @GetMapping("/manager/restaurants/{restaurantId}/orders/new")
     public ResponseEntity<List<Order>> getNewOrders(@PathVariable long restaurantId) {
+        // using static manager name for now, extract from jwt eventually
+        String manager = "lucas";
+        // Check if user is manager of restaurantId
+        Optional<Restaurant> restaurant = restaurantRepo.findById(restaurantId);
+        if(restaurant.isEmpty()) {
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        } else if (restaurant.get().getManagerName().equals(manager)) {
+            return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
+        }
         List<Order> orders = orderRepo.getNewOrdersByRestaurantId(restaurantId);
         return new ResponseEntity<>(orders, HttpStatus.OK);
     }
@@ -197,24 +230,68 @@ public class AwaBackendController {
     public HttpStatus createProduct(
         @PathVariable long restaurantId, @RequestBody Product newProduct
     ) {
+        // using static manager name for now, extract from jwt eventually
+        String manager = "lucas";
+        // Check if user is manager of restaurantId
+        Optional<Restaurant> restaurant = restaurantRepo.findById(restaurantId);
+        if(restaurant.isEmpty()) {
+            return HttpStatus.NOT_FOUND;
+        } else if (restaurant.get().getManagerName().equals(manager)) {
+            return HttpStatus.FORBIDDEN;
+        }
+        // make sure product is created for the restaurant 
+        // specified in the request path
+        newProduct.restaurantId = restaurantId;
         productRepo.save(newProduct);
         return HttpStatus.CREATED;
     }
 
     @GetMapping("/manager/restaurant/orders/{orderId}")
     public ResponseEntity<Order> getOrderAsManager(@PathVariable long orderId) {
+        // using static manager name for now, extract from jwt eventually
+        String manager = "lucas";
+        // Check if user is manager of restaurantId
         Optional<Order> order = orderRepo.findById(orderId);
-        if (order.isPresent()){
-            return new ResponseEntity<>(order.get(), HttpStatus.OK);
-        } else {
+        if (order.isEmpty()){
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
+        // Check if user is manager of restaurantId from order
+        Optional<Restaurant> restaurant = restaurantRepo.findById(order.get().restaurantId);
+        if(restaurant.isPresent()){
+            if(!restaurant.get().managerName.equals(manager)){
+                return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
+            }
+        } else {
+            // Invalid restaurantId
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+        // if all is ok
+        return new ResponseEntity<>(order.get(), HttpStatus.CREATED);
     }
 
     @PutMapping("/manager/restaurants/orders/{orderId}")
-    public ResponseEntity<String> updateOrderStatus(
+    public HttpStatus updateOrderStatus(
         @PathVariable long orderId, @RequestBody int status
     ) {
-        return null;
+        // using static manager name for now, extract from jwt eventually
+        String manager = "lucas";
+        // Check if user is manager of restaurantId
+        Optional<Order> order = orderRepo.findById(orderId);
+        if (order.isEmpty()){
+            return HttpStatus.NOT_FOUND;
+        }
+        // Check if user is manager of restaurantId from order
+        Optional<Restaurant> restaurant = restaurantRepo.findById(order.get().restaurantId);
+        if(restaurant.isPresent()){
+            if(!restaurant.get().managerName.equals(manager)){
+                return HttpStatus.FORBIDDEN;
+            }
+        } else {
+            // Invalid restaurantId
+            return HttpStatus.BAD_REQUEST;
+        }
+        // if all is okay
+        orderRepo.updateOrderStatus(status, orderId);
+        return HttpStatus.OK;
     }
 }

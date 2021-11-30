@@ -22,5 +22,10 @@ public interface RestaurantRepo extends JpaRepository<Restaurant, Long>{
 
     @Query(value = search, nativeQuery = true)
     List<Restaurant> search( String name, String type, int priceMin, int priceMax, String addr);
+
+    final String getByManager = "select * from restaurants where manager_name = ?;";
+
+    @Query(value = getByManager, nativeQuery = true)
+    List<Restaurant> getByManager(String manager);
     
 }

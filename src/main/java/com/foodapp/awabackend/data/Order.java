@@ -15,7 +15,7 @@ public class Order {
     @Column(name = "order_id")
     public long orderId;
     @Column(name = "restaurant_id")
-    public String restaurantId;
+    public long restaurantId;
     @Column(name = "user_name")
     public String username;
     @Column(name = "order_status")
