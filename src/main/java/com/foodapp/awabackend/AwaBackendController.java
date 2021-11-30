@@ -12,7 +12,6 @@ import com.foodapp.awabackend.repo.RestaurantRepo;
 import com.foodapp.awabackend.repo.UserRepo;
 import com.foodapp.awabackend.data.Restaurant;
 import com.foodapp.awabackend.data.User;
-import com.foodapp.awabackend.entities.Account;
 import com.foodapp.awabackend.data.Order;
 import com.foodapp.awabackend.data.OrderProductRelation;
 import com.foodapp.awabackend.data.Product;
@@ -79,10 +78,6 @@ public class AwaBackendController {
         List<Product> menu = productRepo.getMenuFromId(restaurantId);
         return new ResponseEntity<>(menu, HttpStatus.OK);
     }
-    @GetMapping("/public/users")
-    public List<User> getUsers() {
-        return userRepo.findAll();
-    }
 
     @PostMapping("/public/users")
     public HttpStatus createUser(@RequestBody User newUser) {
@@ -119,10 +114,8 @@ public class AwaBackendController {
 
     @PostMapping("/customer/buy")
     public HttpStatus buyCart(
-        // @RequestBody Map<Long, Integer> list
         @RequestBody Cart cart
     ) {
-        // Cart cart = new Cart(list);
         // username is static for now, should be 
         // extracted from jwt token.
         String username = "moritz";
@@ -136,21 +129,51 @@ public class AwaBackendController {
 
     @GetMapping("/customer/orders")
     public ResponseEntity<List<Order>> getOrders() {
-        List<Order> res = orderRepo.getOrdersByUsername("moritz");
+        // username static for now, extract from jwt later
+        String username = "moritz";
+        List<Order> res = orderRepo.getOrdersByUsername(username);
         return new ResponseEntity<List<Order>>(res, HttpStatus.OK);
     }
 
     @GetMapping("/customer/orders/{orderId}")
     public ResponseEntity<Map<String,Object>> getOrder(@PathVariable long orderId) {
-        Map<String,Object> order = new HashMap<>();
-        order.put("details", orderRepo.getOrderById(orderId));
-        order.put("products", orderProductRepo.findAll());
-        return new ResponseEntity<>(order, HttpStatus.OK);
+        // username static for now, extract from jwt later
+        String username = "moritz";
+        Optional<Order> order = orderRepo.findById(orderId);
+        // if no order for orderId can be found return 404
+        if (order.isEmpty()){
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }
+        // only return the Order if the user is the owner of the order
+        if(order.get().username.equals(username)) {
+            Map<String,Object> res = new HashMap<>();
+            res.put("details", order.get());
+            res.put("products", orderProductRepo.getOrderProducts(orderId));
+            return new ResponseEntity<>(res, HttpStatus.OK);
+        } else {
+        // order.userName is not the same as username return 403 FORBIDDEN
+            return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
+        }
     }
 
-    @PutMapping("/customer/orders/confirm")
-    public ResponseEntity<String> confirmOrder(@RequestBody int status) {
-        return null;
+    @PutMapping("/customer/orders/{orderId}/confirm")
+    public HttpStatus confirmOrder(@PathVariable long orderId) {
+        // username static for now, extract from jwt later
+        String username = "moritz";
+        Optional<Order> order = orderRepo.findById(orderId);
+        // if no order for orderId can be found return 404
+        if (order.isEmpty()){
+            return HttpStatus.NOT_FOUND;
+        }
+        // if order does not belong to order or 
+        // order has not been marked as delivered by manager
+        // return 403
+        // TODO: make sure that the status codes are correct
+        if(!order.get().username.equals(username) || order.get().orderStatus > 10){
+            return HttpStatus.FORBIDDEN;
+        }
+        orderRepo.updateOrderStatus(4, orderId);
+        return HttpStatus.OK;
     }
 
     @PostMapping("/manager/restaurants")

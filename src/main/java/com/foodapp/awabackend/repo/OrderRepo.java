@@ -17,7 +17,7 @@ public interface OrderRepo extends JpaRepository<Order, Long>{
     final String getOrdersByUsername = "SELECT * FROM orders where user_name = ?;";
     final String getNewOrdersByRestaurantId = "select * from orders where restaurant_id = ? and order_status = 0;";
     final String getOrdersByRestaurantId = "select * from orders where restaurant_id = ?;";
-    final String updateOrderStatus = "update orders put order_status = ? where order_id = ?";
+    final String updateOrderStatus = "update orders set order_status = ? where order_id = ?";
 
     @Query(value = getOrderById, nativeQuery = true)
     public Order getOrderById(long order_id);
@@ -31,8 +31,11 @@ public interface OrderRepo extends JpaRepository<Order, Long>{
     @Query(value = getOrdersByRestaurantId, nativeQuery = true)
     public List<Order> getOrdersByRestaurantId(long id);
 
+
+    @Modifying
+    @Transactional
     @Query(value = updateOrderStatus, nativeQuery = true)
-    public List<Order> updateOrderStatus(long id, int status);
+    public void updateOrderStatus(int status, long id);
 
 
 
