@@ -14,9 +14,6 @@ import com.foodapp.awabackend.data.Order;
 @Repository
 public interface OrderRepo extends JpaRepository<Order, Long>{
     final String getOrderById = "select * from orders where order_id = ?;";
-    final String getOrderProducts = "SELECT product_name, op.amount, op.product_price, op.amount * op.product_price as total_price "
-     + " FROM orders_products op"
-     + " JOIN products p on (op.product_id = p.product_id) where op.order_id = ?;";
     final String getOrdersByUsername = "SELECT * FROM orders where user_name = ?;";
     final String getNewOrdersByRestaurantId = "select * from orders where restaurant_id = ? and order_status = 0;";
     final String getOrdersByRestaurantId = "select * from orders where restaurant_id = ?;";
@@ -24,9 +21,6 @@ public interface OrderRepo extends JpaRepository<Order, Long>{
 
     @Query(value = getOrderById, nativeQuery = true)
     public Order getOrderById(long order_id);
-
-    @Query(value = getOrderProducts, nativeQuery = true)
-    public List<Object[]> getOrderProducts(long order_id);
 
     @Query(value = getOrdersByUsername, nativeQuery = true)
     public List<Order> getOrdersByUsername(String username);
