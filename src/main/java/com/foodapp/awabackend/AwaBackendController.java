@@ -69,11 +69,13 @@ public class AwaBackendController {
         List<Restaurant> res = restaurantRepo.search("%"+name+"%","%"+typeSearch+"%", priceMin,priceMax,addr);
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
+
     @GetMapping("/public/restaurants/{restaurantId}")
     public ResponseEntity<Restaurant> getRestaurant(@PathVariable long restaurantId) {
         Restaurant res = restaurantRepo.findById(restaurantId).get();
         return new ResponseEntity<Restaurant>(res, HttpStatus.OK);
     }
+
     @GetMapping("/public/restaurants/{restaurantId}/menu")
     public ResponseEntity<List<Product>> getMenu(@PathVariable long restaurantId) {
         List<Product> menu = productRepo.getMenuFromId(restaurantId);
