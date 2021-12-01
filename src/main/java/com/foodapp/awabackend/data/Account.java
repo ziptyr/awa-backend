@@ -5,6 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 @Entity
 @Table(name="users")
 public class Account {
@@ -20,7 +22,20 @@ public class Account {
     @Column(name="password_hash")
     private String passwordHash;
 
-    public Account(){}
+    public Account() {}
+
+    //public Account(String userName, String address, boolean manager, String passwordHash) {
+    //    this.userName = userName;
+    //    this.address = address;
+    //    this.manager = manager;
+    //    BCryptPasswordEncoder pwEncoder = new BCryptPasswordEncoder();
+    //    this.passwordHash = pwEncoder.encode(this.passwordHash);
+    //}
+
+    public void encodePassword() {
+        BCryptPasswordEncoder pwEncoder = new BCryptPasswordEncoder();
+        this.passwordHash = pwEncoder.encode(this.passwordHash);
+    }
 
     public String getUserName() {
         return userName;
@@ -53,5 +68,4 @@ public class Account {
     public void setPasswordHash(String passwordHash) {
         this.passwordHash = passwordHash;
     }
-    
 }
