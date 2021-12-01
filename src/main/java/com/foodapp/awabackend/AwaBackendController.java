@@ -18,7 +18,6 @@ import com.foodapp.awabackend.data.Product;
 import com.foodapp.awabackend.data.Cart;
 import com.foodapp.awabackend.data.NewProduct;
 
-import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
