@@ -97,15 +97,17 @@ public class AwaBackendController {
     //    return new ResponseEntity<>(menu, HttpStatus.OK);
     //}
 
-    //@PostMapping("/public/users")
-    //public ResponseEntity<String> createUser(@RequestBody Account newUser) {
-    //    //////////////////////////////////////
-    //    // Password should be salted and hashed before inserting the user
-    //    // But for that to work, authentication must first be implemented.
-    //    //////////////////////////////////////
-    //    accountRepo.save(newUser);
-    //    return new ResponseEntity<>("CREATED",HttpStatus.CREATED);
-    //}
+    @PostMapping("/public/users")
+    public ResponseEntity<String> createUser(@RequestBody Account newUser) {
+        //////////////////////////////////////
+        // Password should be salted and hashed before inserting the user
+        // But for that to work, authentication must first be implemented.
+        //////////////////////////////////////
+
+        newUser.encodePassword();
+        accountRepo.save(newUser);
+        return new ResponseEntity<>("CREATED", HttpStatus.CREATED);
+    }
 
     ////////////////////////////////////////
     //// This might get handled by Spring security allready
