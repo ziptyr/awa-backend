@@ -7,7 +7,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="users")
-public class User {
+public class Account {
 
     @Id
     @Column(name="user_name")
@@ -20,7 +20,7 @@ public class User {
     @Column(name="password_hash")
     private String passwordHash;
 
-    public User(){}
+    public Account(){}
 
     public String getUserName() {
         return userName;
