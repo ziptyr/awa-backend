@@ -12,10 +12,13 @@ import com.foodapp.awabackend.repo.RestaurantRepo;
 import com.foodapp.awabackend.repo.UserRepo;
 import com.foodapp.awabackend.data.Restaurant;
 import com.foodapp.awabackend.data.User;
+import com.foodapp.awabackend.data.NewRestaurant;
 import com.foodapp.awabackend.data.Order;
 import com.foodapp.awabackend.data.Product;
 import com.foodapp.awabackend.data.Cart;
+import com.foodapp.awabackend.data.NewProduct;
 
+import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -79,18 +82,13 @@ public class AwaBackendController {
     }
 
     @PostMapping("/public/users")
-    public HttpStatus createUser(@RequestBody User newUser) {
-        try {
-            // newUser.setPasswordHash(encoder.encode(newUser.getPasswordHash()));
-        } catch (Exception e){
-            return HttpStatus.INTERNAL_SERVER_ERROR;
-        }
+    public ResponseEntity<String> createUser(@RequestBody User newUser) {
         //////////////////////////////////////
         // Password should be salted and hashed before inserting the user
         // But for that to work, authentication must first be implemented.
         //////////////////////////////////////
         userRepo.save(newUser);
-        return HttpStatus.CREATED;
+        return new ResponseEntity<>("CREATED",HttpStatus.CREATED);
     }
 
     //////////////////////////////////////
@@ -112,7 +110,7 @@ public class AwaBackendController {
     //////////////////////////////////////
 
     @PostMapping("/customer/buy")
-    public HttpStatus buyCart(
+    public ResponseEntity<String> buyCart(
         @RequestBody Cart cart
     ) {
         // username is static for now, should be 
@@ -120,9 +118,9 @@ public class AwaBackendController {
         String username = "moritz";
         boolean success = cart.placeOrder(username, orderRepo, productRepo);
         if(success) {
-            return HttpStatus.OK;
+            return new ResponseEntity<>("Order placed",HttpStatus.OK);
         } else {
-            return HttpStatus.BAD_REQUEST;
+            return new ResponseEntity<>("Order can only have products from one restaurant",HttpStatus.BAD_REQUEST);
         }
     }
 
@@ -156,23 +154,23 @@ public class AwaBackendController {
     }
 
     @PutMapping("/customer/orders/{orderId}/confirm")
-    public HttpStatus confirmOrder(@PathVariable long orderId) {
+    public ResponseEntity<String> confirmOrder(@PathVariable long orderId) {
         // username static for now, extract from jwt later
         String username = "moritz";
         Optional<Order> order = orderRepo.findById(orderId);
         // if no order for orderId can be found return 404
         if (order.isEmpty()){
-            return HttpStatus.NOT_FOUND;
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
         // if order does not belong to order or 
         // order has not been marked as delivered by manager
         // return 403
         // TODO: make sure that the status codes are correct
         if(!order.get().username.equals(username) || order.get().orderStatus > 10){
-            return HttpStatus.FORBIDDEN;
+            return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
         }
         orderRepo.updateOrderStatus(4, orderId);
-        return HttpStatus.OK;
+        return new ResponseEntity<>("delivery confirmed", HttpStatus.OK);
     }
 
     @GetMapping("/manager/restaurants")
@@ -185,14 +183,12 @@ public class AwaBackendController {
     }
 
     @PostMapping("/manager/restaurants")
-    public HttpStatus createRestaurant(@RequestBody Restaurant newRestaurant) {
+    public ResponseEntity<String> createRestaurant(@RequestBody NewRestaurant r) {
         // using static manager name for now, extract from jwt eventually
         String manager = "lucas";
-        // double check restaurant manager name
-        newRestaurant.setManagerName(manager);
-        restaurantRepo.save(newRestaurant);
+        restaurantRepo.createRestaurant(r.restaurantName, manager, r.address, r.opens, r.closes, r.image, r.type, r.priceLevel);
 
-        return HttpStatus.OK;
+        return new ResponseEntity<>("CREATED",HttpStatus.CREATED);
     }
 
     @GetMapping("/manager/restaurants/{restaurantId}/orders")
@@ -203,7 +199,7 @@ public class AwaBackendController {
         Optional<Restaurant> restaurant = restaurantRepo.findById(restaurantId);
         if(restaurant.isEmpty()) {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-        } else if (restaurant.get().getManagerName().equals(manager)) {
+        } else if (!restaurant.get().getManagerName().equals(manager)) {
             return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
         }
 
@@ -219,7 +215,7 @@ public class AwaBackendController {
         Optional<Restaurant> restaurant = restaurantRepo.findById(restaurantId);
         if(restaurant.isEmpty()) {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-        } else if (restaurant.get().getManagerName().equals(manager)) {
+        } else if (!restaurant.get().getManagerName().equals(manager)) {
             return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
         }
         List<Order> orders = orderRepo.getNewOrdersByRestaurantId(restaurantId);
@@ -227,23 +223,22 @@ public class AwaBackendController {
     }
 
     @PostMapping("/manager/restaurants/{restaurantId}/products")
-    public HttpStatus createProduct(
-        @PathVariable long restaurantId, @RequestBody Product newProduct
+    public ResponseEntity<String> createProduct(
+        @PathVariable long restaurantId, @RequestBody NewProduct np
     ) {
         // using static manager name for now, extract from jwt eventually
         String manager = "lucas";
         // Check if user is manager of restaurantId
         Optional<Restaurant> restaurant = restaurantRepo.findById(restaurantId);
         if(restaurant.isEmpty()) {
-            return HttpStatus.NOT_FOUND;
-        } else if (restaurant.get().getManagerName().equals(manager)) {
-            return HttpStatus.FORBIDDEN;
+            return new ResponseEntity<>("RESTAURANT NOT FOUND",HttpStatus.NOT_FOUND);
+        } else if (!restaurant.get().getManagerName().equals(manager)) {
+            return new ResponseEntity<>("User does not own restaurant",HttpStatus.FORBIDDEN);
         }
         // make sure product is created for the restaurant 
         // specified in the request path
-        newProduct.restaurantId = restaurantId;
-        productRepo.save(newProduct);
-        return HttpStatus.CREATED;
+        productRepo.createProduct(restaurantId, np.name, np.description, np.price, np.image, np.category);
+        return new ResponseEntity<>("CREATED",HttpStatus.CREATED);
     }
 
     @GetMapping("/manager/restaurant/orders/{orderId}")
@@ -270,7 +265,7 @@ public class AwaBackendController {
     }
 
     @PutMapping("/manager/restaurants/orders/{orderId}")
-    public HttpStatus updateOrderStatus(
+    public ResponseEntity<String> updateOrderStatus(
         @PathVariable long orderId, @RequestBody int status
     ) {
         // using static manager name for now, extract from jwt eventually
@@ -278,20 +273,20 @@ public class AwaBackendController {
         // Check if user is manager of restaurantId
         Optional<Order> order = orderRepo.findById(orderId);
         if (order.isEmpty()){
-            return HttpStatus.NOT_FOUND;
+            return new ResponseEntity<>("ORDER NOT FOUND", HttpStatus.NOT_FOUND);
         }
         // Check if user is manager of restaurantId from order
         Optional<Restaurant> restaurant = restaurantRepo.findById(order.get().restaurantId);
         if(restaurant.isPresent()){
             if(!restaurant.get().managerName.equals(manager)){
-                return HttpStatus.FORBIDDEN;
+                return new ResponseEntity<>("User does not own corresponding restaurant",HttpStatus.FORBIDDEN);
             }
         } else {
             // Invalid restaurantId
-            return HttpStatus.BAD_REQUEST;
+            return new ResponseEntity<>("RESTAURANT NOT FOUND", HttpStatus.BAD_REQUEST);
         }
         // if all is okay
         orderRepo.updateOrderStatus(status, orderId);
-        return HttpStatus.OK;
+        return new ResponseEntity<>("Order status updated", HttpStatus.OK);
     }
 }

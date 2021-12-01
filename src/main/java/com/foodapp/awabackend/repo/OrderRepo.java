@@ -14,9 +14,9 @@ import com.foodapp.awabackend.data.Order;
 @Repository
 public interface OrderRepo extends JpaRepository<Order, Long>{
     final String getOrderById = "select * from orders where order_id = ?;";
-    final String getOrdersByUsername = "SELECT * FROM orders where user_name = ?;";
+    final String getOrdersByUsername = "SELECT * FROM orders where user_name = ? order by order_date desc;";
     final String getNewOrdersByRestaurantId = "select * from orders where restaurant_id = ? and order_status = 0;";
-    final String getOrdersByRestaurantId = "select * from orders where restaurant_id = ?;";
+    final String getOrdersByRestaurantId = "select * from orders where restaurant_id = ? order by order_date desc;";
     final String updateOrderStatus = "update orders set order_status = ? where order_id = ?";
 
     @Query(value = getOrderById, nativeQuery = true)

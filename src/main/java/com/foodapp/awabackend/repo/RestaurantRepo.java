@@ -5,8 +5,10 @@ import com.foodapp.awabackend.data.Restaurant;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @Repository
@@ -27,5 +29,14 @@ public interface RestaurantRepo extends JpaRepository<Restaurant, Long>{
 
     @Query(value = getByManager, nativeQuery = true)
     List<Restaurant> getByManager(String manager);
+
+    final String createRestaurant = "insert into restaurants("
+        + " restaurant_name, manager_name, address, opens, closes, image, type, price_level)"
+        + " values(?,?,?,?,?,?,?,?)";
+
+    @Transactional
+    @Modifying
+    @Query(value = createRestaurant, nativeQuery = true) 
+    void createRestaurant(String name, String manager, String addr, String opens, String closes, String image, String type, long priceLevel);
     
 }

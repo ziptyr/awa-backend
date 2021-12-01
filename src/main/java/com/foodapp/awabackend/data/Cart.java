@@ -8,8 +8,8 @@ import com.foodapp.awabackend.repo.OrderRepo;
 
 
 /**
- * This class holds the datastructure that will be pares from 
- * the route "/customer/buy". It also performs 
+ * This class holds the datastructure that will be parsed from 
+ * the route POST /customer/buy. It also performs 
  * input validation on the carts content; it checks if 
  * all products are from the same restaurant
  */
