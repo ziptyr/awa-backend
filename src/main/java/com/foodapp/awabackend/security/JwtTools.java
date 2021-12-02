@@ -39,10 +39,10 @@ public class JwtTools {
             String username = decodedJWT.getSubject();
             String role = decodedJWT.getClaim("role").asString();
             SimpleGrantedAuthority auth = new SimpleGrantedAuthority(role);
-            // authToken = new UsernamePasswordAuthenticationToken(username, null, List.of(auth));
-            ArrayList<SimpleGrantedAuthority> authorities = new ArrayList<>();
-            authorities.add(auth);
-            authToken = new UsernamePasswordAuthenticationToken(username, null, authorities);
+            authToken = new UsernamePasswordAuthenticationToken(username, null, List.of(auth));
+            // ArrayList<SimpleGrantedAuthority> authorities = new ArrayList<>();
+            // authorities.add(auth);
+            // authToken = new UsernamePasswordAuthenticationToken(username, null, authorities);
         } catch(Exception e) {}
 
         return authToken;
