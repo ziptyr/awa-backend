@@ -22,6 +22,7 @@ public class MySecurityConfiguration extends WebSecurityConfigurerAdapter {
     MyPasswordEncoder pwEncoder;
 
     @Autowired
+    // TODO: ask which one to use
     //UserDetailsService udService;
     UserServiceImplementation udService;
 
