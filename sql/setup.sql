@@ -5,7 +5,7 @@ create table users (
     user_name VARCHAR(50) NOT NULL PRIMARY KEY,
     address VARCHAR(50) NOT NULL,
     manager BOOLEAN NOT NULL,
-    password_hash VARCHAR(50) NOT NULL
+    password_hash VARCHAR(60) NOT NULL
 );
 create table restaurants (
     restaurant_id INT NOT NULL PRIMARY KEY DEFAULT NEXTVAL('restaurant_pk_seq'),
@@ -42,6 +42,3 @@ create table orders_products (
     product_price NUMERIC NOT NULL,
     PRIMARY KEY(order_id, product_id)
 );
-
-
-
