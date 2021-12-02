@@ -102,32 +102,11 @@ public class AwaBackendController {
 
     @PostMapping("/public/users")
     public ResponseEntity<String> createUser(@RequestBody Account newUser) {
-        /**
-         * salts and encodes the password befor saving to database
-         */
-
         newUser.encodePassword();
         accountRepo.save(newUser);
         return new ResponseEntity<>("CREATED", HttpStatus.CREATED);
     }
 
-    //////////////////////////////////////
-    // This might get handled by Spring security allready
-    //////////////////////////////////////
-    @PostMapping("/public/users/login")
-    public ResponseEntity<String> login(@RequestBody Map<String, String> userInfo) {
-       return null;
-    }
-
-
-    //////////////////////////////////////
-    // The following routes need to allways 
-    // check if the user calling the route
-    // is allowed to perform the actions.
-    // Some routes need to know which
-    // user is calling the route.
-    // For that, security with jwt must work!
-    //////////////////////////////////////
 
     @PostMapping("/customer/buy")
     public ResponseEntity<String> buyCart(
@@ -135,27 +114,25 @@ public class AwaBackendController {
     ) {
        // username is static for now, should be 
        // extracted from jwt token.
-       String username = "moritz";
-       boolean success = cart.placeOrder(username, orderRepo, productRepo);
-       if(success) {
-           return new ResponseEntity<>("Order placed",HttpStatus.OK);
-       } else {
-           return new ResponseEntity<>("Order can only have products from one restaurant",HttpStatus.BAD_REQUEST);
-       }
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        boolean success = cart.placeOrder(username, orderRepo, productRepo);
+        if(success) {
+            return new ResponseEntity<>("Order placed",HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Order can only have products from one restaurant",HttpStatus.BAD_REQUEST);
+        }
     }
 
     @GetMapping("/customer/orders")
     public ResponseEntity<List<Order>> getOrders() {
-       // username static for now, extract from jwt later
-       String username = "moritz";
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
        List<Order> res = orderRepo.getOrdersByUsername(username);
        return new ResponseEntity<List<Order>>(res, HttpStatus.OK);
     }
 
     @GetMapping("/customer/orders/{orderId}")
     public ResponseEntity<Map<String,Object>> getOrder(@PathVariable long orderId) {
-        // username static for now, extract from jwt later
-        String username = "moritz";
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<Order> order = orderRepo.findById(orderId);
         // if no order for orderId can be found return 404
         if (!order.isPresent()){
@@ -176,7 +153,7 @@ public class AwaBackendController {
     @PutMapping("/customer/orders/{orderId}/confirm")
     public ResponseEntity<String> confirmOrder(@PathVariable long orderId) {
         // username static for now, extract from jwt later
-        String username = "moritz";
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<Order> order = orderRepo.findById(orderId);
         // if no order for orderId can be found return 404
         if (!order.isPresent()){
@@ -185,8 +162,7 @@ public class AwaBackendController {
         // if order does not belong to order or 
         // order has not been marked as delivered by manager
         // return 403
-        // TODO: make sure that the status codes are correct
-        if(!order.get().username.equals(username) || order.get().orderStatus > 10){
+        if(!order.get().username.equals(username) || order.get().orderStatus >= 3){
             return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
         }
         orderRepo.updateOrderStatus(4, orderId);
@@ -195,26 +171,23 @@ public class AwaBackendController {
 
     @GetMapping("/manager/restaurants")
     public ResponseEntity<List<Restaurant>> getManagerRestaurants() {
-       // using static manager name for now, extract from jwt eventually
-       String manager = "lucas";
-       List<Restaurant> restaurants = restaurantRepo.getByManager(manager);
+        String manager = SecurityContextHolder.getContext().getAuthentication().getName();
+        List<Restaurant> restaurants = restaurantRepo.getByManager(manager);
 
-       return new ResponseEntity<>(restaurants, HttpStatus.OK);
+        return new ResponseEntity<>(restaurants, HttpStatus.OK);
     }
 
     @PostMapping("/manager/restaurants")
     public ResponseEntity<String> createRestaurant(@RequestBody NewRestaurant r) {
-       // using static manager name for now, extract from jwt eventually
-       String manager = "lucas";
-       restaurantRepo.createRestaurant(r.restaurantName, manager, r.address, r.opens, r.closes, r.image, r.type, r.priceLevel);
+        String manager = SecurityContextHolder.getContext().getAuthentication().getName();
+        restaurantRepo.createRestaurant(r.restaurantName, manager, r.address, r.opens, r.closes, r.image, r.type, r.priceLevel);
 
        return new ResponseEntity<>("CREATED",HttpStatus.CREATED);
     }
 
     @GetMapping("/manager/restaurants/{restaurantId}/orders")
     public ResponseEntity<List<Order>> getRestaurantsOrders(@PathVariable long restaurantId) {
-        // using static manager name for now, extract from jwt eventually
-        String manager = "lucas";
+        String manager = SecurityContextHolder.getContext().getAuthentication().getName();
         // Check if user is manager of restaurantId
         Optional<Restaurant> restaurant = restaurantRepo.findById(restaurantId);
         if(!restaurant.isPresent()) {
@@ -229,8 +202,7 @@ public class AwaBackendController {
 
     @GetMapping("/manager/restaurants/{restaurantId}/orders/new")
     public ResponseEntity<List<Order>> getNewOrders(@PathVariable long restaurantId) {
-        // using static manager name for now, extract from jwt eventually
-        String manager = "lucas";
+        String manager = SecurityContextHolder.getContext().getAuthentication().getName();
         // Check if user is manager of restaurantId
         Optional<Restaurant> restaurant = restaurantRepo.findById(restaurantId);
         if(!restaurant.isPresent()) {
@@ -246,8 +218,7 @@ public class AwaBackendController {
     public ResponseEntity<String> createProduct(
        @PathVariable long restaurantId, @RequestBody NewProduct np
     ) {
-        // using static manager name for now, extract from jwt eventually
-        String manager = "lucas";
+        String manager = SecurityContextHolder.getContext().getAuthentication().getName();
         // Check if user is manager of restaurantId
         Optional<Restaurant> restaurant = restaurantRepo.findById(restaurantId);
         if(!restaurant.isPresent()) {
@@ -262,9 +233,8 @@ public class AwaBackendController {
     }
 
     @GetMapping("/manager/restaurant/orders/{orderId}")
-    public ResponseEntity<Order> getOrderAsManager(@PathVariable long orderId) {
-        // using static manager name for now, extract from jwt eventually
-        String manager = "lucas";
+    public ResponseEntity<Map<String,Object>> getOrderAsManager(@PathVariable long orderId) {
+        String manager = SecurityContextHolder.getContext().getAuthentication().getName();
         // Check if user is manager of restaurantId
         Optional<Order> order = orderRepo.findById(orderId);
         if (!order.isPresent()){
@@ -281,7 +251,10 @@ public class AwaBackendController {
             return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
         }
         // if all is ok
-        return new ResponseEntity<>(order.get(), HttpStatus.CREATED);
+        Map<String,Object> res = new HashMap<>();
+        res.put("details", order.get());
+        res.put("products", orderProductRepo.getOrderProducts(orderId));
+        return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
 
@@ -289,8 +262,7 @@ public class AwaBackendController {
     public ResponseEntity<String> updateOrderStatus(
        @PathVariable long orderId, @RequestBody int status
     ) {
-        // using static manager name for now, extract from jwt eventually
-        String manager = "lucas";
+        String manager = SecurityContextHolder.getContext().getAuthentication().getName();
         // Check if user is manager of restaurantId
         Optional<Order> order = orderRepo.findById(orderId);
         if (!order.isPresent()){
