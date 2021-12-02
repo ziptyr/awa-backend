@@ -139,7 +139,7 @@ public class AwaBackendController {
         String username = "moritz";
         Optional<Order> order = orderRepo.findById(orderId);
         // if no order for orderId can be found return 404
-        if (order.isEmpty()){
+        if (!order.isPresent()){
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
         // only return the Order if the user is the owner of the order
@@ -160,7 +160,7 @@ public class AwaBackendController {
         String username = "moritz";
         Optional<Order> order = orderRepo.findById(orderId);
         // if no order for orderId can be found return 404
-        if (order.isEmpty()){
+        if (!order.isPresent()){
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
         // if order does not belong to order or 
@@ -198,7 +198,7 @@ public class AwaBackendController {
         String manager = "lucas";
         // Check if user is manager of restaurantId
         Optional<Restaurant> restaurant = restaurantRepo.findById(restaurantId);
-        if(restaurant.isEmpty()) {
+        if(!restaurant.isPresent()) {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         } else if (!restaurant.get().getManagerName().equals(manager)) {
             return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
@@ -214,7 +214,7 @@ public class AwaBackendController {
         String manager = "lucas";
         // Check if user is manager of restaurantId
         Optional<Restaurant> restaurant = restaurantRepo.findById(restaurantId);
-        if(restaurant.isEmpty()) {
+        if(!restaurant.isPresent()) {
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         } else if (!restaurant.get().getManagerName().equals(manager)) {
             return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
@@ -231,7 +231,7 @@ public class AwaBackendController {
         String manager = "lucas";
         // Check if user is manager of restaurantId
         Optional<Restaurant> restaurant = restaurantRepo.findById(restaurantId);
-        if(restaurant.isEmpty()) {
+        if(!restaurant.isPresent()) {
             return new ResponseEntity<>("RESTAURANT NOT FOUND",HttpStatus.NOT_FOUND);
         } else if (!restaurant.get().getManagerName().equals(manager)) {
             return new ResponseEntity<>("User does not own restaurant",HttpStatus.FORBIDDEN);
@@ -248,7 +248,7 @@ public class AwaBackendController {
         String manager = "lucas";
         // Check if user is manager of restaurantId
         Optional<Order> order = orderRepo.findById(orderId);
-        if (order.isEmpty()){
+        if (!order.isPresent()){
             return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
         }
         // Check if user is manager of restaurantId from order
@@ -273,7 +273,7 @@ public class AwaBackendController {
         String manager = "lucas";
         // Check if user is manager of restaurantId
         Optional<Order> order = orderRepo.findById(orderId);
-        if (order.isEmpty()){
+        if (!order.isPresent()){
             return new ResponseEntity<>("ORDER NOT FOUND", HttpStatus.NOT_FOUND);
         }
         // Check if user is manager of restaurantId from order
