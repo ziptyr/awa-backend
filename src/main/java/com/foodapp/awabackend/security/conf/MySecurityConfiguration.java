@@ -36,13 +36,13 @@ public class MySecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-        http.authorizeHttpRequests().antMatchers("/public/**").permitAll();
-        http.authorizeHttpRequests()
+        http.authorizeRequests().antMatchers("/public/**").permitAll();
+        http.authorizeRequests()
             .antMatchers("/manager/**").hasAnyAuthority(Role.MANAGER.toString());
-        http.authorizeHttpRequests()
+        http.authorizeRequests()
             .antMatchers("/customer/**").hasAnyAuthority(Role.CUSTOMER.toString());
     
-        http.authorizeHttpRequests().anyRequest().authenticated();
+        http.authorizeRequests().anyRequest().authenticated();
 
         UsernamePasswordAuthenticationFilter myAuthFilter = new MyAuthenticationFilter();
         myAuthFilter.setAuthenticationManager(this.authenticationManager());
