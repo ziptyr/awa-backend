@@ -9,9 +9,9 @@ import com.foodapp.awabackend.repo.OrderProductsRepo;
 import com.foodapp.awabackend.repo.OrderRepo;
 import com.foodapp.awabackend.repo.ProductRepo;
 import com.foodapp.awabackend.repo.RestaurantRepo;
-import com.foodapp.awabackend.repo.UserRepo;
+import com.foodapp.awabackend.repo.AccountRepo;
 import com.foodapp.awabackend.data.Restaurant;
-import com.foodapp.awabackend.data.User;
+import com.foodapp.awabackend.data.Account;
 import com.foodapp.awabackend.data.NewRestaurant;
 import com.foodapp.awabackend.data.Order;
 import com.foodapp.awabackend.data.Product;
@@ -21,6 +21,7 @@ import com.foodapp.awabackend.data.NewProduct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -35,7 +36,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 public class AwaBackendController {
 
     @Autowired
-    UserRepo userRepo;
+    AccountRepo accountRepo;
     @Autowired
     RestaurantRepo restaurantRepo;
     @Autowired 
@@ -45,51 +46,69 @@ public class AwaBackendController {
     @Autowired
     OrderProductsRepo orderProductRepo;
 
+    @GetMapping("/public")
+    public String helloPublic() {
+        return "works";
+    }
+
+    @GetMapping("/customer")
+    public String helloCustomer() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        return "Customer: Hello " + username;
+    }
+
+    @GetMapping("/manager")
+    public String helloManager() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        return "Manager: Hello " + username;
+    }
+
     @GetMapping("/public/restaurants")
     public ResponseEntity<List<Restaurant>> searchRestaurants(
-        @RequestParam Optional<String> restaurantName,
-        @RequestParam Optional<String> type, 
-        @RequestParam Optional<Integer> price,
-        @RequestParam Optional<String> address
+       @RequestParam Optional<String> restaurantName,
+       @RequestParam Optional<String> type, 
+       @RequestParam Optional<Integer> price,
+       @RequestParam Optional<String> address
     ) {
-        String name = "";
-        String typeSearch = "";
-        int priceMin = 1;
-        int priceMax = 3;
-        String addr = "%";
+       String name = "";
+       String typeSearch = "";
+       int priceMin = 1;
+       int priceMax = 3;
+       String addr = "%";
 
-        if(restaurantName.isPresent()) name = restaurantName.get();
-        if(type.isPresent()) typeSearch = type.get();
-        if(price.isPresent()) {
-            priceMin = price.get();
-            priceMax = price.get();
-        }
-        if(address.isPresent()) addr = "%"+address.get()+"%";
+       if(restaurantName.isPresent()) name = restaurantName.get();
+       if(type.isPresent()) typeSearch = type.get();
+       if(price.isPresent()) {
+           priceMin = price.get();
+           priceMax = price.get();
+       }
+       if(address.isPresent()) addr = "%"+address.get()+"%";
 
-        List<Restaurant> res = restaurantRepo.search("%"+name+"%","%"+typeSearch+"%", priceMin,priceMax,addr);
-        return new ResponseEntity<>(res, HttpStatus.OK);
+       List<Restaurant> res = restaurantRepo.search("%"+name+"%","%"+typeSearch+"%", priceMin,priceMax,addr);
+       return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
     @GetMapping("/public/restaurants/{restaurantId}")
     public ResponseEntity<Restaurant> getRestaurant(@PathVariable long restaurantId) {
-        Restaurant res = restaurantRepo.findById(restaurantId).get();
-        return new ResponseEntity<Restaurant>(res, HttpStatus.OK);
+       Restaurant res = restaurantRepo.findById(restaurantId).get();
+       return new ResponseEntity<Restaurant>(res, HttpStatus.OK);
     }
 
     @GetMapping("/public/restaurants/{restaurantId}/menu")
     public ResponseEntity<List<Product>> getMenu(@PathVariable long restaurantId) {
-        List<Product> menu = productRepo.getMenuFromId(restaurantId);
-        return new ResponseEntity<>(menu, HttpStatus.OK);
+       List<Product> menu = productRepo.getMenuFromId(restaurantId);
+       return new ResponseEntity<>(menu, HttpStatus.OK);
     }
 
     @PostMapping("/public/users")
-    public ResponseEntity<String> createUser(@RequestBody User newUser) {
-        //////////////////////////////////////
-        // Password should be salted and hashed before inserting the user
-        // But for that to work, authentication must first be implemented.
-        //////////////////////////////////////
-        userRepo.save(newUser);
-        return new ResponseEntity<>("CREATED",HttpStatus.CREATED);
+    public ResponseEntity<String> createUser(@RequestBody Account newUser) {
+        /**
+         * salts and encodes the password befor saving to database
+         */
+
+        newUser.encodePassword();
+        accountRepo.save(newUser);
+        return new ResponseEntity<>("CREATED", HttpStatus.CREATED);
     }
 
     //////////////////////////////////////
@@ -97,7 +116,7 @@ public class AwaBackendController {
     //////////////////////////////////////
     @PostMapping("/public/users/login")
     public ResponseEntity<String> login(@RequestBody Map<String, String> userInfo) {
-        return null;
+       return null;
     }
 
 
@@ -112,25 +131,25 @@ public class AwaBackendController {
 
     @PostMapping("/customer/buy")
     public ResponseEntity<String> buyCart(
-        @RequestBody Cart cart
+       @RequestBody Cart cart
     ) {
-        // username is static for now, should be 
-        // extracted from jwt token.
-        String username = "moritz";
-        boolean success = cart.placeOrder(username, orderRepo, productRepo);
-        if(success) {
-            return new ResponseEntity<>("Order placed",HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>("Order can only have products from one restaurant",HttpStatus.BAD_REQUEST);
-        }
+       // username is static for now, should be 
+       // extracted from jwt token.
+       String username = "moritz";
+       boolean success = cart.placeOrder(username, orderRepo, productRepo);
+       if(success) {
+           return new ResponseEntity<>("Order placed",HttpStatus.OK);
+       } else {
+           return new ResponseEntity<>("Order can only have products from one restaurant",HttpStatus.BAD_REQUEST);
+       }
     }
 
     @GetMapping("/customer/orders")
     public ResponseEntity<List<Order>> getOrders() {
-        // username static for now, extract from jwt later
-        String username = "moritz";
-        List<Order> res = orderRepo.getOrdersByUsername(username);
-        return new ResponseEntity<List<Order>>(res, HttpStatus.OK);
+       // username static for now, extract from jwt later
+       String username = "moritz";
+       List<Order> res = orderRepo.getOrdersByUsername(username);
+       return new ResponseEntity<List<Order>>(res, HttpStatus.OK);
     }
 
     @GetMapping("/customer/orders/{orderId}")
@@ -176,20 +195,20 @@ public class AwaBackendController {
 
     @GetMapping("/manager/restaurants")
     public ResponseEntity<List<Restaurant>> getManagerRestaurants() {
-        // using static manager name for now, extract from jwt eventually
-        String manager = "lucas";
-        List<Restaurant> restaurants = restaurantRepo.getByManager(manager);
+       // using static manager name for now, extract from jwt eventually
+       String manager = "lucas";
+       List<Restaurant> restaurants = restaurantRepo.getByManager(manager);
 
-        return new ResponseEntity<>(restaurants, HttpStatus.OK);
+       return new ResponseEntity<>(restaurants, HttpStatus.OK);
     }
 
     @PostMapping("/manager/restaurants")
     public ResponseEntity<String> createRestaurant(@RequestBody NewRestaurant r) {
-        // using static manager name for now, extract from jwt eventually
-        String manager = "lucas";
-        restaurantRepo.createRestaurant(r.restaurantName, manager, r.address, r.opens, r.closes, r.image, r.type, r.priceLevel);
+       // using static manager name for now, extract from jwt eventually
+       String manager = "lucas";
+       restaurantRepo.createRestaurant(r.restaurantName, manager, r.address, r.opens, r.closes, r.image, r.type, r.priceLevel);
 
-        return new ResponseEntity<>("CREATED",HttpStatus.CREATED);
+       return new ResponseEntity<>("CREATED",HttpStatus.CREATED);
     }
 
     @GetMapping("/manager/restaurants/{restaurantId}/orders")
@@ -225,7 +244,7 @@ public class AwaBackendController {
 
     @PostMapping("/manager/restaurants/{restaurantId}/products")
     public ResponseEntity<String> createProduct(
-        @PathVariable long restaurantId, @RequestBody NewProduct np
+       @PathVariable long restaurantId, @RequestBody NewProduct np
     ) {
         // using static manager name for now, extract from jwt eventually
         String manager = "lucas";
@@ -265,9 +284,10 @@ public class AwaBackendController {
         return new ResponseEntity<>(order.get(), HttpStatus.CREATED);
     }
 
+
     @PutMapping("/manager/restaurants/orders/{orderId}")
     public ResponseEntity<String> updateOrderStatus(
-        @PathVariable long orderId, @RequestBody int status
+       @PathVariable long orderId, @RequestBody int status
     ) {
         // using static manager name for now, extract from jwt eventually
         String manager = "lucas";
