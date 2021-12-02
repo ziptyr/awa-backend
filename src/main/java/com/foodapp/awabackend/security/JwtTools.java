@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.User;
 public class JwtTools {
 
     private static final String SECRET = "secret_key";
+
     public static String createToken(User user) {
         Algorithm algorithm = Algorithm.HMAC256(SECRET.getBytes());
 
