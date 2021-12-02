@@ -2,6 +2,7 @@ package com.foodapp.awabackend.security.conf;
 
 import com.foodapp.awabackend.data.Role;
 import com.foodapp.awabackend.security.encoder.MyPasswordEncoder;
+import com.foodapp.awabackend.security.service.UserServiceImplementation;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -21,7 +22,8 @@ public class MySecurityConfiguration extends WebSecurityConfigurerAdapter {
     MyPasswordEncoder pwEncoder;
 
     @Autowired
-    UserDetailsService udService;
+    //UserDetailsService udService;
+    UserServiceImplementation udService;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
