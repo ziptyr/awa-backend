@@ -1,7 +1,5 @@
 package com.foodapp.awabackend.security;
 
-import java.util.List;
-
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -10,6 +8,9 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class JwtTools {
 
@@ -38,7 +39,10 @@ public class JwtTools {
             String username = decodedJWT.getSubject();
             String role = decodedJWT.getClaim("role").asString();
             SimpleGrantedAuthority auth = new SimpleGrantedAuthority(role);
-            authToken = new UsernamePasswordAuthenticationToken(username, null, List.of(auth));
+            // authToken = new UsernamePasswordAuthenticationToken(username, null, List.of(auth));
+            ArrayList<SimpleGrantedAuthority> authorities = new ArrayList<>();
+            authorities.add(auth);
+            authToken = new UsernamePasswordAuthenticationToken(username, null, authorities);
         } catch(Exception e) {}
 
         return authToken;
