@@ -102,10 +102,9 @@ public class AwaBackendController {
 
     @PostMapping("/public/users")
     public ResponseEntity<String> createUser(@RequestBody Account newUser) {
-        //////////////////////////////////////
-        // Password should be salted and hashed before inserting the user
-        // But for that to work, authentication must first be implemented.
-        //////////////////////////////////////
+        /**
+         * salts and encodes the password befor saving to database
+         */
 
         newUser.encodePassword();
         accountRepo.save(newUser);
