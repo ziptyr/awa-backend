@@ -20,7 +20,7 @@ public class Account {
     private boolean manager;
     // @JsonIgnore
     @Column(name="password_hash")
-    private String passwordHash;
+    private String password;
 
     public Account() {}
 
@@ -34,7 +34,7 @@ public class Account {
 
     public void encodePassword() {
         BCryptPasswordEncoder pwEncoder = new BCryptPasswordEncoder();
-        this.passwordHash = pwEncoder.encode(this.passwordHash);
+        this.password = pwEncoder.encode(this.password);
     }
 
     public String getUserName() {
@@ -61,11 +61,11 @@ public class Account {
         this.manager = manager;
     }
 
-    public String getPasswordHash() {
-        return passwordHash;
+    public String getPassword() {
+        return password;
     }
 
-    public void setPasswordHash(String passwordHash) {
-        this.passwordHash = passwordHash;
+    public void setPassword(String password) {
+        this.password = password;
     }
 }
