@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.foodapp.awabackend.data.Order;
 
@@ -52,6 +53,7 @@ public interface OrderRepo extends JpaRepository<Order, Long>{
         + " where order_id = ?) where order_id = ?";
     final String updateDeliveryAddress = "update orders set delivery_address = ?"
         + " where order_id = ?";
+    final String updateEta = "update orders set eta = ? where order_id = ?";
 
     @Query(value = getNextPrimaryKey, nativeQuery = true)
     public int getNextPrimaryKey();
@@ -75,5 +77,10 @@ public interface OrderRepo extends JpaRepository<Order, Long>{
     @Transactional
     @Query(value = updateDeliveryAddress, nativeQuery = true)
     public void updateDeliveryAddress(String addr, long orderId);
+
+    @Modifying
+    @Transactional
+    @Query(value = updateEta, nativeQuery = true)
+    public void updateEta(String string, long orderId);
 
 }
