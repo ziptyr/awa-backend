@@ -30,7 +30,7 @@ public class UserServiceImplementation implements UserDetailsService {
         } else {
             Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
             authorities.add(new SimpleGrantedAuthority(this.getRole(account).toString()));
-            return new User(username, account.getPasswordHash(), authorities);
+            return new User(username, account.getPassword(), authorities);
         }
     }
 
