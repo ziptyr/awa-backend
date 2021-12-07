@@ -1,5 +1,7 @@
 package com.foodapp.awabackend;
 
+import java.io.IOException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +13,8 @@ import com.foodapp.awabackend.repo.ProductRepo;
 import com.foodapp.awabackend.repo.RestaurantRepo;
 import com.foodapp.awabackend.repo.AccountRepo;
 import com.foodapp.awabackend.data.Restaurant;
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import com.foodapp.awabackend.data.Account;
 import com.foodapp.awabackend.data.NewRestaurant;
 import com.foodapp.awabackend.data.Order;
@@ -28,7 +32,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.bind.annotation.PostMapping;
 
 
@@ -282,4 +286,30 @@ public class AwaBackendController {
         orderRepo.updateOrderStatus(status, orderId);
         return new ResponseEntity<>("Order status updated", HttpStatus.OK);
     }
+
+    @PostMapping("/manager/image")
+    public ResponseEntity<Map<String,String>> uploadImage(@RequestParam("file") MultipartFile file){
+
+
+        Cloudinary cl = new Cloudinary(ObjectUtils.asMap(
+            "cloud_name", "dybhkvbdi",
+            "api_key", "999868143333514",
+            "api_secret", "jh0NZcGRSM5yXJ7Pt4cPorSElgA",
+            "secure", true
+        ));
+
+        String imageUrl;
+
+        try {
+            Map map = cl.uploader().upload(file.getBytes(), ObjectUtils.emptyMap());
+            imageUrl = (String) map.get("url");
+        } catch (IOException e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        Map<String,String> urlJson = Collections.singletonMap("image_url", imageUrl);
+        
+        return new ResponseEntity<>(urlJson, HttpStatus.OK);
+    }
+
 }
