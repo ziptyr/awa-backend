@@ -18,6 +18,7 @@ import com.cloudinary.utils.ObjectUtils;
 import com.foodapp.awabackend.data.Account;
 import com.foodapp.awabackend.data.NewRestaurant;
 import com.foodapp.awabackend.data.Order;
+import com.foodapp.awabackend.data.OrderUpdate;
 import com.foodapp.awabackend.data.Product;
 import com.foodapp.awabackend.data.Cart;
 import com.foodapp.awabackend.data.NewProduct;
@@ -261,10 +262,9 @@ public class AwaBackendController {
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
-
     @PutMapping("/manager/restaurants/orders/{orderId}")
     public ResponseEntity<String> updateOrderStatus(
-       @PathVariable long orderId, @RequestBody int status
+       @PathVariable long orderId, @RequestBody OrderUpdate update
     ) {
         String manager = SecurityContextHolder.getContext().getAuthentication().getName();
         // Check if user is manager of restaurantId
@@ -282,8 +282,14 @@ public class AwaBackendController {
             // Invalid restaurantId
             return new ResponseEntity<>("RESTAURANT NOT FOUND", HttpStatus.BAD_REQUEST);
         }
-        // if all is okay
-        orderRepo.updateOrderStatus(status, orderId);
+        // if all is okay set order status and optionally update eta
+        orderRepo.updateOrderStatus(update.status, orderId);
+
+        if(update.eta.isPresent()){
+            orderRepo.updateEta(update.eta.get(), orderId);
+        }
+
+
         return new ResponseEntity<>("Order status updated", HttpStatus.OK);
     }
 
