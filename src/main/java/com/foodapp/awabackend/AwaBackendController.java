@@ -69,27 +69,30 @@ public class AwaBackendController {
     }
 
     @GetMapping("/public/restaurants")
-    public ResponseEntity<List<Restaurant>> searchRestaurants(
-       @RequestParam Optional<String> restaurantName,
-       @RequestParam Optional<String> type, 
-       @RequestParam Optional<Integer> price,
-       @RequestParam Optional<String> address
+    public ResponseEntity<List<Restaurant>> getRestaurants(
+    //    @RequestParam Optional<String> restaurantName,
+    //    @RequestParam Optional<String> type, 
+    //    @RequestParam Optional<Integer> price,
+    //    @RequestParam Optional<String> address
     ) {
-       String name = "";
-       String typeSearch = "";
-       int priceMin = 1;
-       int priceMax = 3;
-       String addr = "%";
+    //    String name = "";
+    //    String typeSearch = "";
+    //    int priceMin = 1;
+    //    int priceMax = 3;
+    //    String addr = "%";
 
-       if(restaurantName.isPresent()) name = restaurantName.get();
-       if(type.isPresent()) typeSearch = type.get();
-       if(price.isPresent()) {
-           priceMin = price.get();
-           priceMax = price.get();
-       }
-       if(address.isPresent()) addr = "%"+address.get()+"%";
+    //    if(restaurantName.isPresent()) name = restaurantName.get();
+    //    if(type.isPresent()) typeSearch = type.get();
+    //    if(price.isPresent()) {
+    //        priceMin = price.get();
+    //        priceMax = price.get();
+    //    }
+    //    if(address.isPresent()) addr = "%"+address.get()+"%";
 
-       List<Restaurant> res = restaurantRepo.search("%"+name+"%","%"+typeSearch+"%", priceMin,priceMax,addr);
+    //    List<Restaurant> res = restaurantRepo.search("%"+name+"%","%"+typeSearch+"%", priceMin,priceMax,addr);
+    //    return new ResponseEntity<>(res, HttpStatus.OK);
+
+       List<Restaurant> res = restaurantRepo.findAll();
        return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
