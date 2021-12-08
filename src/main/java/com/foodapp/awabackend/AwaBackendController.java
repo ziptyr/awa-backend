@@ -150,7 +150,7 @@ public class AwaBackendController {
             res.put("products", orderProductRepo.getOrderProducts(orderId));
             return new ResponseEntity<>(res, HttpStatus.OK);
         } else {
-        // order.userName is not the same as username return 403 FORBIDDEN
+        // if order.userName is not the same as username return 403 FORBIDDEN
             return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
         }
     }
@@ -167,7 +167,7 @@ public class AwaBackendController {
         // if order does not belong to order or 
         // order has not been marked as delivered by manager
         // return 403
-        if(!order.get().username.equals(username) || order.get().orderStatus >= 3){
+        if(!order.get().username.equals(username) || order.get().orderStatus != 3){
             return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
         }
         orderRepo.updateOrderStatus(4, orderId);
