@@ -1,6 +1,8 @@
 package com.foodapp.awabackend;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -24,6 +26,7 @@ import com.foodapp.awabackend.data.Cart;
 import com.foodapp.awabackend.data.NewProduct;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -50,6 +53,15 @@ public class AwaBackendController {
     ProductRepo productRepo;
     @Autowired
     OrderProductsRepo orderProductRepo;
+
+    @GetMapping("/")
+    public ResponseEntity<HttpHeaders> redirectToApiDocumentation() throws URISyntaxException{
+        URI externalUri = new URI("https://awa-food-app.stoplight.io/docs/awa-food-app-api/YXBpOjI4OTEwMDQ1-awa-food-api");
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setLocation(externalUri);
+
+        return new ResponseEntity<>(httpHeaders, HttpStatus.SEE_OTHER);
+    }
 
     @GetMapping("/public")
     public String helloPublic() {
