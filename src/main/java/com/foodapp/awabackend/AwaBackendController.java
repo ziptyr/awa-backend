@@ -205,7 +205,7 @@ public class AwaBackendController {
        return new ResponseEntity<>("CREATED",HttpStatus.CREATED);
     }
 
-    @PostMapping("/manager/restaurants/{id}")
+    @PutMapping("/manager/restaurants/{id}")
     public ResponseEntity<String> updateRestaurant(
             @PathVariable long id,
             @RequestBody NewRestaurant r
@@ -218,7 +218,7 @@ public class AwaBackendController {
             return new ResponseEntity<>("Restaurant with id does not exist", HttpStatus.NOT_FOUND);
         }
         // if restaurant exists check if it manager is authorized to make changes
-        if(restaurant.get().getManagerName() != manager){
+        if(!restaurant.get().getManagerName().equals(manager)){
             return new ResponseEntity<>(HttpStatus.FORBIDDEN.toString(), HttpStatus.FORBIDDEN);
         }
 
