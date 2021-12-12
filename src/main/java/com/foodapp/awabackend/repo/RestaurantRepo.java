@@ -38,5 +38,12 @@ public interface RestaurantRepo extends JpaRepository<Restaurant, Long>{
     @Modifying
     @Query(value = createRestaurant, nativeQuery = true) 
     void createRestaurant(String name, String manager, String addr, String opens, String closes, String image, String type, long priceLevel);
+
+    final String updateRestaurant = "update restaurants set restaurant_name = ?, address = ?, opens = ?, closes = ?, image = ?, type = ?, price_level = ? where restaurant_id = ?;";
+
+    @Transactional
+    @Modifying
+    @Query(value = updateRestaurant, nativeQuery = true) 
+    void updateRestaurant(String name, String addr, String opens, String closes, String image, String type, long priceLevel,long id);
     
 }
