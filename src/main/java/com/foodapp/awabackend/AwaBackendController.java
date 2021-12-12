@@ -205,6 +205,36 @@ public class AwaBackendController {
        return new ResponseEntity<>("CREATED",HttpStatus.CREATED);
     }
 
+    @PostMapping("/manager/restaurants/{id}")
+    public ResponseEntity<String> updateRestaurant(
+            @PathVariable long id,
+            @RequestBody NewRestaurant r
+        ){
+        // Get managers name from jwt
+        String manager = SecurityContextHolder.getContext().getAuthentication().getName();
+        // Check if restaurant with id exists
+        Optional<Restaurant> restaurant = restaurantRepo.findById(id);
+        if(restaurant.isEmpty()){
+            return new ResponseEntity<>("Restaurant with id does not exist", HttpStatus.NOT_FOUND);
+        }
+        // if restaurant exists check if it manager is authorized to make changes
+        if(restaurant.get().getManagerName() != manager){
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN.toString(), HttpStatus.FORBIDDEN);
+        }
+
+        restaurantRepo.updateRestaurant(r.restaurantName,
+                                        r.address,
+                                        r.opens,
+                                        r.closes,
+                                        r.image,
+                                        r.type,
+                                        r.priceLevel,
+                                        id);
+
+
+        return new ResponseEntity<>(HttpStatus.OK.toString(), HttpStatus.OK);
+    }
+
     @GetMapping("/manager/restaurants/{restaurantId}/orders")
     public ResponseEntity<List<Order>> getRestaurantsOrders(@PathVariable long restaurantId) {
         String manager = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -299,7 +329,7 @@ public class AwaBackendController {
         }
         // if all is okay set order status and optionally update eta
         orderRepo.updateOrderStatus(update.status, orderId);
-
+        // only if eta is set in request body
         if(update.eta.isPresent()){
             orderRepo.updateEta(update.eta.get(), orderId);
         }
@@ -311,7 +341,7 @@ public class AwaBackendController {
     @PostMapping("/manager/image")
     public ResponseEntity<Map<String,String>> uploadImage(@RequestParam("file") MultipartFile file){
 
-
+        // Setup a cloudinary Client
         Cloudinary cl = new Cloudinary(ObjectUtils.asMap(
             "cloud_name", "dybhkvbdi",
             "api_key", "999868143333514",
@@ -322,12 +352,13 @@ public class AwaBackendController {
         String imageUrl;
 
         try {
+            // try to upload the image and extract image_url
             Map map = cl.uploader().upload(file.getBytes(), ObjectUtils.emptyMap());
             imageUrl = (String) map.get("url");
         } catch (IOException e) {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
+        // Return the image_url if no Exception was thrown
         Map<String,String> urlJson = Collections.singletonMap("image_url", imageUrl);
         
         return new ResponseEntity<>(urlJson, HttpStatus.OK);
