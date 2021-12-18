@@ -19,7 +19,7 @@ public class Order {
     private long restaurantId;
 
     @Column(name = "user_name")
-    private String username;
+    private String userName;
 
     @Column(name = "order_status")
     private int orderStatus;
@@ -46,8 +46,8 @@ public class Order {
         return restaurantId;
     }
 
-    public String getUsername() {
-        return username;
+    public String getUserName() {
+        return userName;
     }
 
     public int getOrderStatus() {
