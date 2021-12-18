@@ -7,9 +7,9 @@ import javax.persistence.IdClass;
 import javax.persistence.Table;
 
 @Entity
-@IdClass(OrderProductRelationId.class)
+@IdClass(OrdersProductsId.class)
 @Table(name = "orders_products")
-public class OrderProductRelation {
+public class OrdersProducts {
 
     @Id
     @Column(name = "order_id")
@@ -25,9 +25,9 @@ public class OrderProductRelation {
     @Column(name = "product_price")
     public double productPrice;
 
-    public OrderProductRelation() {}
+    public OrdersProducts() {}
 
-    public OrderProductRelation(int amount, double productPrice) {
+    public OrdersProducts(int amount, double productPrice) {
         this.amount = amount;
         this.productPrice = productPrice;
     }

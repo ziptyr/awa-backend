@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 
-public class OrderProductRelationId implements Serializable {
+public class OrdersProductsId implements Serializable {
 
     @Column(name = "order_id")
     public Long orderId;
@@ -12,9 +12,9 @@ public class OrderProductRelationId implements Serializable {
     @Column(name = "product_id")
     public Long productId;
 
-    public OrderProductRelationId() {}
+    public OrdersProductsId() {}
 
-    public OrderProductRelationId(long orderId, long productId) {
+    public OrdersProductsId(long orderId, long productId) {
         this.orderId = orderId;
         this.productId = productId;
     }

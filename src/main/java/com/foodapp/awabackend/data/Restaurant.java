@@ -37,9 +37,9 @@ public class Restaurant {
         return restaurantId;
     }
 
-    public void setRestaurantId(long restaurantId) {
-        this.restaurantId = restaurantId;
-    }
+    //public void setRestaurantId(long restaurantId) {
+    //    this.restaurantId = restaurantId;
+    //}
 
     public String getRestaurantName() {
         return restaurantName;
