@@ -18,6 +18,10 @@ public class RestaurantService {
         return restaurantRepo.findById(restaurantId);
     }
 
+    public List<Restaurant> findAll() {
+        return restaurantRepo.findAll();
+    }
+
     public List<Restaurant> findByManagerName(String userName) {
         return restaurantRepo.findByManagerName(userName);
     }

@@ -12,6 +12,7 @@ import java.util.Optional;
 import com.foodapp.awabackend.repo.AccountRepo;
 import com.foodapp.awabackend.repo.ProductRepo;
 import com.foodapp.awabackend.repo.RestaurantRepo;
+import com.foodapp.awabackend.service.AccountService;
 import com.foodapp.awabackend.service.OrderService;
 import com.foodapp.awabackend.service.ProductService;
 import com.foodapp.awabackend.service.RestaurantService;
@@ -19,6 +20,7 @@ import com.foodapp.awabackend.data.Role;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.foodapp.awabackend.data.Account;
+import com.foodapp.awabackend.data.Restaurant;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -39,12 +41,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 public class AwaBackendController {
 
     @Autowired
-    AccountRepo accountRepo;
-
-    @GetMapping("/manager/customers")
-    public List<Account> getCustomers() {
-        return accountRepo.findUsersByRole(Role.CUSTOMER);
-    }
+    AccountService accountService;
 
     @Autowired
     OrderService orderService;
@@ -54,15 +51,6 @@ public class AwaBackendController {
 
     @Autowired
     RestaurantService restaurantService;
-
-    //@Autowired
-    //ProductRepo productRepo;
-
-    //@Autowired 
-    //OrderRepo orderRepo;
-
-    //@Autowired
-    //OrderProductsRepo orderProductRepo;
 
     @GetMapping("/")
     public ResponseEntity<HttpHeaders> redirectToApiDocumentation() throws URISyntaxException{
@@ -78,19 +66,19 @@ public class AwaBackendController {
     @PostMapping("/public/users")
     public String createUser(@RequestBody Account newUser) {
         newUser.encodePassword();
-        accountRepo.save(newUser);
+        accountService.save(newUser);
         return "CREATED";
     }
 
-    //@GetMapping("/public/restaurants")
-    //public List<Restaurant> getRestaurants() {
-    //    return restaurantRepo.findAll();
-    //}
+    @GetMapping("/public/restaurants")
+    public List<Restaurant> getRestaurants() {
+        return restaurantService.findAll();
+    }
 
-    //@GetMapping("/public/restaurants/{restaurantId}")
-    //public Restaurant getRestaurant(@PathVariable long restaurantId) {
-    //   return restaurantRepo.findById(restaurantId).get();
-    //}
+    @GetMapping("/public/restaurants/{restaurantId}")
+    public Restaurant getRestaurant(@PathVariable long restaurantId) {
+       return restaurantService.findById(restaurantId);
+    }
 
     //@PostMapping("/customer/buy")
     //public String buyCart(@RequestBody Cart cart) {
@@ -110,19 +98,19 @@ public class AwaBackendController {
     @GetMapping("/customer/account")
     public Account getCustomerAccount() {
         String userName = SecurityContextHolder.getContext().getAuthentication().getName();
-        return accountRepo.findByUserName(userName);
+        return accountService.findByUserName(userName);
     }
 
     @GetMapping("/manager/account")
     public Account getManagerAccount() {
         String userName = SecurityContextHolder.getContext().getAuthentication().getName();
-        return accountRepo.findByUserName(userName);
+        return accountService.findByUserName(userName);
     }
 
-    //@GetMapping("/manager/customers")
-    //public List<Account> getCustomers() {
-    //    return accountRepo.findUsersByRole(Role.CUSTOMER);
-    //}
+    @GetMapping("/manager/customers")
+    public List<Account> getCustomers() {
+        return accountService.findUsersByRole(Role.CUSTOMER);
+    }
 
     // REDONE END
 
