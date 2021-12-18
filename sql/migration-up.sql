@@ -3,7 +3,6 @@ create sequence restaurant_pk_seq;
 create sequence product_pk_seq;
 create sequence order_pk_seq;
 
-
 -- Create tables
 create table users (
     user_name VARCHAR(50) NOT NULL PRIMARY KEY,

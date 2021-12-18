@@ -1,6 +1,7 @@
 create sequence restaurant_pk_seq;
 create sequence product_pk_seq;
 create sequence order_pk_seq;
+
 create table users (
     user_name VARCHAR(50) NOT NULL PRIMARY KEY,
     address VARCHAR(50) NOT NULL,
