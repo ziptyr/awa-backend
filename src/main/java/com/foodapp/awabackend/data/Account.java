@@ -2,6 +2,8 @@ package com.foodapp.awabackend.data;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -16,8 +18,11 @@ public class Account {
     private String userName;
     @Column(name="address")
     private String address;
-    @Column(name="manager")
-    private boolean manager;
+    @Column(name="role")
+    @Enumerated(EnumType.STRING)
+    private Role role;
+    //@Column(name="manager")
+    //private boolean manager;
     // @JsonIgnore
     @Column(name="password_hash")
     private String password;
@@ -53,13 +58,21 @@ public class Account {
         this.address = address;
     }
 
-    public boolean isManager() {
-        return manager;
+    public Role getRole() {
+        return role;
     }
 
-    public void setManager(boolean manager) {
-        this.manager = manager;
+    public void setRole(Role role) {
+        this.role = role;
     }
+
+    //public boolean isManager() {
+    //    return manager;
+    //}
+
+    //public void setManager(boolean manager) {
+    //    this.manager = manager;
+    //}
 
     public String getPassword() {
         return password;

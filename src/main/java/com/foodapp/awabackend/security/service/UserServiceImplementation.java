@@ -29,13 +29,13 @@ public class UserServiceImplementation implements UserDetailsService {
             throw new UsernameNotFoundException("User not in database");
         } else {
             Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-            authorities.add(new SimpleGrantedAuthority(this.getRole(account).toString()));
+            authorities.add(new SimpleGrantedAuthority(account.getRole().toString()));
             return new User(username, account.getPassword(), authorities);
         }
     }
 
-    private Role getRole(Account account) {
-        if (account.isManager()) return Role.MANAGER;
-        else return Role.CUSTOMER;
-    }
+    //private Role getRole(Account account) {
+    //    if (account.isManager()) return Role.MANAGER;
+    //    else return Role.CUSTOMER;
+    //}
 }

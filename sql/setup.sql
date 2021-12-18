@@ -5,7 +5,8 @@ create sequence order_pk_seq;
 create table users (
     user_name VARCHAR(50) NOT NULL PRIMARY KEY,
     address VARCHAR(50) NOT NULL,
-    manager BOOLEAN NOT NULL,
+    -- manager BOOLEAN NOT NULL,
+    role VARCHAR(50) NOT NULL,
     password_hash VARCHAR(250) NOT NULL
 );
 
