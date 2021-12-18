@@ -25,4 +25,8 @@ public class RestaurantService {
     public List<Restaurant> findByManagerName(String userName) {
         return restaurantRepo.findByManagerName(userName);
     }
+
+    public void save(Restaurant restaurant) {
+        restaurantRepo.save(restaurant);
+    }
 }

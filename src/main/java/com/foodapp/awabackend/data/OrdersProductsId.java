@@ -12,7 +12,7 @@ public class OrdersProductsId implements Serializable {
     @Column(name = "product_id")
     private Long productId;
 
-    private OrdersProductsId() {}
+    OrdersProductsId() {}
 
     public Long getOrderId() {
         return orderId;

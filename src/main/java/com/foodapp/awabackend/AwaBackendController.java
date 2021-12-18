@@ -133,29 +133,15 @@ public class AwaBackendController {
         return accountService.findByUsername(username);
     }
 
+    @PostMapping("/manager/restaurants")
+    public Restaurant createRestaurant(@RequestBody Restaurant restaurant) {
+        restaurantService.save(restaurant);
+        return restaurant;
+    }
+
     // REDONE END
 
     // OLD
-
-    //@GetMapping("/customer/orders/{orderId}")
-    //public ResponseEntity<Map<String,Object>> getOrder(@PathVariable long orderId) {
-    //    String username = SecurityContextHolder.getContext().getAuthentication().getName();
-    //    Optional<Order> order = orderRepo.findById(orderId);
-    //    // if no order for orderId can be found return 404
-    //    if (!order.isPresent()){
-    //        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-    //    }
-    //    // only return the Order if the user is the owner of the order
-    //    if(order.get().username.equals(username)) {
-    //        Map<String,Object> res = new HashMap<>();
-    //        res.put("details", order.get());
-    //        res.put("products", orderProductRepo.getOrderProducts(orderId));
-    //        return new ResponseEntity<>(res, HttpStatus.OK);
-    //    } else {
-    //    // if order.userName is not the same as username return 403 FORBIDDEN
-    //        return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
-    //    }
-    //}
 
     //@GetMapping("/manager/restaurants")
     //public ResponseEntity<List<Restaurant>> getManagerRestaurants() {
@@ -163,14 +149,6 @@ public class AwaBackendController {
     //    List<Restaurant> restaurants = restaurantRepo.getByManager(manager);
 
     //    return new ResponseEntity<>(restaurants, HttpStatus.OK);
-    //}
-
-    //@PostMapping("/manager/restaurants")
-    //public ResponseEntity<String> createRestaurant(@RequestBody NewRestaurant r) {
-    //    String manager = SecurityContextHolder.getContext().getAuthentication().getName();
-    //    restaurantRepo.createRestaurant(r.restaurantName, manager, r.address, r.opens, r.closes, r.image, r.type, r.priceLevel);
-
-    //   return new ResponseEntity<>("CREATED",HttpStatus.CREATED);
     //}
 
     //@PutMapping("/manager/restaurants/{id}")

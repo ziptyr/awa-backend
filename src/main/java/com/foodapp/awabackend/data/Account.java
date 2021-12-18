@@ -1,5 +1,7 @@
 package com.foodapp.awabackend.data;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -11,7 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Entity
 @Table(name="users")
-public class Account {
+public class Account implements Serializable {
 
     @Id
     @Column(name="user_name")
@@ -27,7 +29,7 @@ public class Account {
     @Column(name="password_hash")
     private String password;
 
-    public Account() {}
+    Account() {}
 
     public void encodePassword() {
         BCryptPasswordEncoder pwEncoder = new BCryptPasswordEncoder();

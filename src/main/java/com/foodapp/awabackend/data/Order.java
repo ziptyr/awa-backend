@@ -1,6 +1,8 @@
 package com.foodapp.awabackend.data;
 
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -9,7 +11,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "orders")
-public class Order {
+public class Order implements Serializable {
     
     @Id
     @Column(name = "order_id")
@@ -36,7 +38,7 @@ public class Order {
     @Column(name = "eta")
     private String eta;
 
-    public Order(){}
+    Order() {}
 
     public long getOrderId() {
         return orderId;

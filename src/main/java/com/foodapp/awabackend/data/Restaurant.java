@@ -1,5 +1,7 @@
 package com.foodapp.awabackend.data;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -7,7 +9,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "restaurants")
-public class Restaurant {
+public class Restaurant implements Serializable {
 
     @Id
     @Column(name = "restaurant_id")
@@ -40,7 +42,7 @@ public class Restaurant {
     // @OneToMany(mappedBy = "restaurant")
     // private Set<Product> menu;
 
-    public Restaurant(){}
+    Restaurant() {}
 
     public long getRestaurantId() {
         return restaurantId;
