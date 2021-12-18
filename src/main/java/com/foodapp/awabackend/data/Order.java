@@ -13,22 +13,80 @@ public class Order {
     
     @Id
     @Column(name = "order_id")
-    public long orderId;
+    private long orderId;
+
     @Column(name = "restaurant_id")
-    public long restaurantId;
+    private long restaurantId;
+
     @Column(name = "user_name")
-    public String username;
+    private String username;
+
     @Column(name = "order_status")
-    public int orderStatus;
+    private int orderStatus;
+
     @Column(name = "order_date")
-    public String orderDate;
+    private String orderDate;
+
     @Column(name = "total")
-    public double total;
+    private double total;
+
     @Column(name = "delivery_address")
-    public String deliveryAddress;
+    private String deliveryAddress;
+
     @Column(name = "eta")
-    public String eta;
-    
+    private String eta;
 
     public Order(){}
+
+    public long getOrderId() {
+        return orderId;
+    }
+
+    public long getRestaurantId() {
+        return restaurantId;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public int getOrderStatus() {
+        return orderStatus;
+    }
+
+    public void setOrderStatus(int orderStatus) {
+        this.orderStatus = orderStatus;
+    }
+
+    public String getOrderDate() {
+        return orderDate;
+    }
+
+    public void setOrderDate(String orderDate) {
+        this.orderDate = orderDate;
+    }
+
+    public double getTotal() {
+        return total;
+    }
+
+    public void setTotal(double total) {
+        this.total = total;
+    }
+
+    public String getDeliveryAddress() {
+        return deliveryAddress;
+    }
+
+    public void setDeliveryAddress(String deliveryAddress) {
+        this.deliveryAddress = deliveryAddress;
+    }
+
+    public String getEta() {
+        return eta;
+    }
+
+    public void setEta(String eta) {
+        this.eta = eta;
+    }
 }

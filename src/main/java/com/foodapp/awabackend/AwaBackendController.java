@@ -10,6 +10,8 @@ import java.util.Map;
 import java.util.Optional;
 
 import com.foodapp.awabackend.repo.AccountRepo;
+import com.foodapp.awabackend.repo.ProductRepo;
+import com.foodapp.awabackend.repo.RestaurantRepo;
 import com.foodapp.awabackend.data.Role;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
@@ -35,12 +37,15 @@ public class AwaBackendController {
 
     @Autowired
     AccountRepo accountRepo;
-    //@Autowired
-    //RestaurantRepo restaurantRepo;
+
+    @Autowired
+    RestaurantRepo restaurantRepo;
+
+    @Autowired
+    ProductRepo productRepo;
+
     //@Autowired 
     //OrderRepo orderRepo;
-    //@Autowired 
-    //ProductRepo productRepo;
     //@Autowired
     //OrderProductsRepo orderProductRepo;
 

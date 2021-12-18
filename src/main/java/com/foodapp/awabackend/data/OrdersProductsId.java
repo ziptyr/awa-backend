@@ -7,15 +7,18 @@ import javax.persistence.Column;
 public class OrdersProductsId implements Serializable {
 
     @Column(name = "order_id")
-    public Long orderId;
+    private Long orderId;
 
     @Column(name = "product_id")
-    public Long productId;
+    private Long productId;
 
-    public OrdersProductsId() {}
+    private OrdersProductsId() {}
 
-    public OrdersProductsId(long orderId, long productId) {
-        this.orderId = orderId;
-        this.productId = productId;
+    public Long getOrderId() {
+        return orderId;
+    }
+
+    public Long getProductId() {
+        return productId;
     }
 }

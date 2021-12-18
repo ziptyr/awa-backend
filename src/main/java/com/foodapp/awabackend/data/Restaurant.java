@@ -11,35 +11,40 @@ public class Restaurant {
 
     @Id
     @Column(name = "restaurant_id")
-    public long restaurantId;
+    private long restaurantId;
+
     @Column(name = "restaurant_name")
-    public String restaurantName;
+    private String restaurantName;
+
     @Column(name = "manager_name")
-    public String managerName;
-    @Column(name = "address")
-    public String address;
+    private String managerName;
+
+    @Column(name = "restaurantAddress")
+    private String restaurantAddress;
+
     @Column(name = "opens")
-    public String opens;
+    private String opens;
+
     @Column(name = "closes")
-    public String closes;
+    private String closes;
+
     @Column(name = "image")
-    public String image;
+    private String image;
+
     @Column(name = "type")
-    public String type;
+    private String type;
+
     @Column(name = "price_level")
-    public long priceLevel;
+    private long priceLevel;
+
     // @OneToMany(mappedBy = "restaurant")
-    // public Set<Product> menu;
+    // private Set<Product> menu;
 
     public Restaurant(){}
 
     public long getRestaurantId() {
         return restaurantId;
     }
-
-    //public void setRestaurantId(long restaurantId) {
-    //    this.restaurantId = restaurantId;
-    //}
 
     public String getRestaurantName() {
         return restaurantName;
@@ -53,16 +58,12 @@ public class Restaurant {
         return managerName;
     }
 
-    public void setManagerName(String managerName) {
-        this.managerName = managerName;
-    }
-
     public String getAddress() {
-        return address;
+        return restaurantAddress;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public void setAddress(String restaurantAddress) {
+        this.restaurantAddress = restaurantAddress;
     }
 
     public String getOpens() {
@@ -104,6 +105,4 @@ public class Restaurant {
     public void setPriceLevel(long priceLevel) {
         this.priceLevel = priceLevel;
     }
-    
-    
 }

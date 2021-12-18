@@ -14,16 +14,22 @@ public class Product {
     @Column(name = "product_id")
     @GeneratedValue
     private long productId;
+
     @Column(name = "restaurant_id")
     private long restaurantId;
+
     @Column(name = "product_name")
-    private String name;
+    private String productName;
+
     @Column(name = "description")
     private String description;
+
     @Column(name = "price")
     private double price;
+
     @Column(name = "image")
     private String image;
+
     @Column(name = "categories")
     private String category;
 
@@ -37,16 +43,12 @@ public class Product {
         return restaurantId;
     }
 
-    public void setRestaurantId(long restaurantId) {
-        this.restaurantId = restaurantId;
+    public String getProductName() {
+        return productName;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    public void setProductName(String productName) {
+        this.productName = productName;
     }
 
     public String getDescription() {
@@ -80,6 +82,4 @@ public class Product {
     public void setCategory(String category) {
         this.category = category;
     }
-
-    
 }

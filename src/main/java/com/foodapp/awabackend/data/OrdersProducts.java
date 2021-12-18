@@ -13,22 +13,41 @@ public class OrdersProducts {
 
     @Id
     @Column(name = "order_id")
-    public Long orderId;
+    private Long orderId;
 
     @Id
     @Column(name = "product_id")
-    public Long productId;
+    private Long productId;
 
     @Column(name = "amount")
-    public int amount;
+    private int amount;
 
     @Column(name = "product_price")
-    public double productPrice;
+    private double productPrice;
 
     public OrdersProducts() {}
 
-    public OrdersProducts(int amount, double productPrice) {
+    public Long getOrderId() {
+        return orderId;
+    }
+
+    public Long getProductId() {
+        return productId;
+    }
+
+    public int getAmount() {
+        return amount;
+    }
+
+    public void setAmount(int amount) {
         this.amount = amount;
+    }
+
+    public double getProductPrice() {
+        return productPrice;
+    }
+
+    public void setProductPrice(double productPrice) {
         this.productPrice = productPrice;
     }
 }

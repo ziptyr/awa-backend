@@ -16,26 +16,22 @@ public class Account {
     @Id
     @Column(name="user_name")
     private String userName;
+
     @Column(name="address")
     private String address;
+
     @Column(name="role")
     @Enumerated(EnumType.STRING)
     private Role role;
+
     //@Column(name="manager")
     //private boolean manager;
     // @JsonIgnore
+
     @Column(name="password_hash")
     private String password;
 
     public Account() {}
-
-    //public Account(String userName, String address, boolean manager, String passwordHash) {
-    //    this.userName = userName;
-    //    this.address = address;
-    //    this.manager = manager;
-    //    BCryptPasswordEncoder pwEncoder = new BCryptPasswordEncoder();
-    //    this.passwordHash = pwEncoder.encode(this.passwordHash);
-    //}
 
     public void encodePassword() {
         BCryptPasswordEncoder pwEncoder = new BCryptPasswordEncoder();
@@ -44,10 +40,6 @@ public class Account {
 
     public String getUserName() {
         return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
     }
 
     public String getAddress() {
@@ -65,14 +57,6 @@ public class Account {
     public void setRole(Role role) {
         this.role = role;
     }
-
-    //public boolean isManager() {
-    //    return manager;
-    //}
-
-    //public void setManager(boolean manager) {
-    //    this.manager = manager;
-    //}
 
     public String getPassword() {
         return password;
