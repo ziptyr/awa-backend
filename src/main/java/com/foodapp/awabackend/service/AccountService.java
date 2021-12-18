@@ -15,8 +15,8 @@ public class AccountService {
     @Autowired
     AccountRepo accountRepo;
 
-    public Account findByUserName(String userName) {
-        return accountRepo.findByUserName(userName);
+    public Account findByUsername(String username) {
+        return accountRepo.findByUsername(username);
     }
 
     public List<Account> findUsersByRole(Role role) {

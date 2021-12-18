@@ -23,7 +23,7 @@ public class UserServiceImplementation implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Account account = accountRepo.findByUserName(username);
+        Account account = accountRepo.findByUsername(username);
 
         if (account == null) {
             throw new UsernameNotFoundException("User not in database");
@@ -33,9 +33,4 @@ public class UserServiceImplementation implements UserDetailsService {
             return new User(username, account.getPassword(), authorities);
         }
     }
-
-    //private Role getRole(Account account) {
-    //    if (account.isManager()) return Role.MANAGER;
-    //    else return Role.CUSTOMER;
-    //}
 }

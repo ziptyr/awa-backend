@@ -26,8 +26,8 @@ public class OrderService {
     @Autowired
     ProductService productService;
 
-    public List<Order> findByUserName(String userName) {
-        return orderRepo.findByUserName(userName);
+    public List<Order> findByUsername(String username) {
+        return orderRepo.findByUsername(username);
     }
 
     public Map<String, Object> getOrder(long orderId) {

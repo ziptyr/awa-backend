@@ -15,7 +15,7 @@ public class Account {
 
     @Id
     @Column(name="user_name")
-    private String userName;
+    private String username;
 
     @Column(name="address")
     private String address;
@@ -34,8 +34,8 @@ public class Account {
         this.password = pwEncoder.encode(this.password);
     }
 
-    public String getUserName() {
-        return userName;
+    public String getUsername() {
+        return username;
     }
 
     public String getAddress() {

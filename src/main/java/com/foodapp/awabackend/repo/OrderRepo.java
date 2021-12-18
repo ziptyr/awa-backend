@@ -11,5 +11,5 @@ import org.springframework.stereotype.Repository;
 public interface OrderRepo extends JpaRepository<Order, Long> {
 
     public Order findById(long orderId);
-    public List<Order> findByUserName(String userName);
+    public List<Order> findByUsername(String username);
 }

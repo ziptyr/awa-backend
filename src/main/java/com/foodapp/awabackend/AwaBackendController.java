@@ -76,11 +76,6 @@ public class AwaBackendController {
         return restaurantService.findAll();
     }
 
-    @GetMapping("/public/restaurants/{restaurantId}")
-    public Restaurant getRestaurant(@PathVariable long restaurantId) {
-       return restaurantService.findById(restaurantId);
-    }
-
     //@PostMapping("/customer/buy")
     //public String buyCart(@RequestBody Cart cart) {
     //    String userName = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -98,25 +93,44 @@ public class AwaBackendController {
 
     @GetMapping("/customer/account")
     public Account getCustomerAccount() {
-        String userName = SecurityContextHolder.getContext().getAuthentication().getName();
-        return accountService.findByUserName(userName);
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        return accountService.findByUsername(username);
     }
+
+    //@PutMapping("/customer/orders/{orderId}/confirm")
+    //public ResponseEntity<String> confirmOrder(@PathVariable long orderId) {
+    //    // username static for now, extract from jwt later
+    //    String username = SecurityContextHolder.getContext().getAuthentication().getName();
+    //    Optional<Order> order = orderRepo.findById(orderId);
+    //    // if no order for orderId can be found return 404
+    //    if (!order.isPresent()){
+    //        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+    //    }
+    //    // if order does not belong to order or 
+    //    // order has not been marked as delivered by manager
+    //    // return 403
+    //    if(!order.get().username.equals(username) || order.get().orderStatus != 3){
+    //        return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
+    //    }
+    //    orderRepo.updateOrderStatus(4, orderId);
+    //    return new ResponseEntity<>("delivery confirmed", HttpStatus.OK);
+    //}
 
     @GetMapping("/customer/orders")
     public List<Order> getOrders() {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        return orderService.findByUserName(username);
+        return orderService.findByUsername(username);
     }
 
     @GetMapping("/manager/account")
     public Account getManagerAccount() {
-        String userName = SecurityContextHolder.getContext().getAuthentication().getName();
-        return accountService.findByUserName(userName);
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        return accountService.findByUsername(username);
     }
 
-    @GetMapping("/manager/customers")
-    public List<Account> getCustomers() {
-        return accountService.findUsersByRole(Role.CUSTOMER);
+    @GetMapping("/manager/customer/{username}")
+    public Account getCustomers(@PathVariable String username) {
+        return accountService.findByUsername(username);
     }
 
     // REDONE END
@@ -141,25 +155,6 @@ public class AwaBackendController {
     //    // if order.userName is not the same as username return 403 FORBIDDEN
     //        return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
     //    }
-    //}
-
-    //@PutMapping("/customer/orders/{orderId}/confirm")
-    //public ResponseEntity<String> confirmOrder(@PathVariable long orderId) {
-    //    // username static for now, extract from jwt later
-    //    String username = SecurityContextHolder.getContext().getAuthentication().getName();
-    //    Optional<Order> order = orderRepo.findById(orderId);
-    //    // if no order for orderId can be found return 404
-    //    if (!order.isPresent()){
-    //        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-    //    }
-    //    // if order does not belong to order or 
-    //    // order has not been marked as delivered by manager
-    //    // return 403
-    //    if(!order.get().username.equals(username) || order.get().orderStatus != 3){
-    //        return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
-    //    }
-    //    orderRepo.updateOrderStatus(4, orderId);
-    //    return new ResponseEntity<>("delivery confirmed", HttpStatus.OK);
     //}
 
     //@GetMapping("/manager/restaurants")
