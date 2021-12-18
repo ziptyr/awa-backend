@@ -24,10 +24,6 @@ public class Account {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    //@Column(name="manager")
-    //private boolean manager;
-    // @JsonIgnore
-
     @Column(name="password_hash")
     private String password;
 
