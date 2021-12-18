@@ -12,6 +12,9 @@ import java.util.Optional;
 import com.foodapp.awabackend.repo.AccountRepo;
 import com.foodapp.awabackend.repo.ProductRepo;
 import com.foodapp.awabackend.repo.RestaurantRepo;
+import com.foodapp.awabackend.service.OrderService;
+import com.foodapp.awabackend.service.ProductService;
+import com.foodapp.awabackend.service.RestaurantService;
 import com.foodapp.awabackend.data.Role;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
@@ -38,11 +41,22 @@ public class AwaBackendController {
     @Autowired
     AccountRepo accountRepo;
 
-    @Autowired
-    RestaurantRepo restaurantRepo;
+    @GetMapping("/manager/customers")
+    public List<Account> getCustomers() {
+        return accountRepo.findUsersByRole(Role.CUSTOMER);
+    }
 
     @Autowired
-    ProductRepo productRepo;
+    OrderService orderService;
+
+    @Autowired
+    ProductService productService;
+
+    @Autowired
+    RestaurantService restaurantService;
+
+    //@Autowired
+    //ProductRepo productRepo;
 
     //@Autowired 
     //OrderRepo orderRepo;
@@ -105,10 +119,10 @@ public class AwaBackendController {
         return accountRepo.findByUserName(userName);
     }
 
-    @GetMapping("/manager/customers")
-    public List<Account> getCustomers() {
-        return accountRepo.findUsersByRole(Role.CUSTOMER);
-    }
+    //@GetMapping("/manager/customers")
+    //public List<Account> getCustomers() {
+    //    return accountRepo.findUsersByRole(Role.CUSTOMER);
+    //}
 
     // REDONE END
 
