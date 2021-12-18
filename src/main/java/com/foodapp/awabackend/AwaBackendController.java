@@ -15,6 +15,7 @@ import com.foodapp.awabackend.repo.ProductRepo;
 import com.foodapp.awabackend.repo.RestaurantRepo;
 import com.foodapp.awabackend.repo.AccountRepo;
 import com.foodapp.awabackend.data.Restaurant;
+import com.foodapp.awabackend.data.Role;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.foodapp.awabackend.data.Account;
@@ -108,6 +109,8 @@ public class AwaBackendController {
        return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
+    // REDONE
+
     @GetMapping("/public/restaurants/{restaurantId}")
     public ResponseEntity<Restaurant> getRestaurant(@PathVariable long restaurantId) {
        Restaurant res = restaurantRepo.findById(restaurantId).get();
@@ -120,6 +123,15 @@ public class AwaBackendController {
        return new ResponseEntity<>(menu, HttpStatus.OK);
     }
 
+    @GetMapping("/manager/customers")
+    public List<Account> getCustomers() {
+        return accountRepo.findUsersByRole(Role.CUSTOMER);
+    }
+
+    // REDONE END
+
+    // OLD
+
     @PostMapping("/public/users")
     public ResponseEntity<String> createUser(@RequestBody Account newUser) {
         newUser.encodePassword();
@@ -127,6 +139,17 @@ public class AwaBackendController {
         return new ResponseEntity<>("CREATED", HttpStatus.CREATED);
     }
 
+    @GetMapping("/customer/account")
+    public Account getCustomerAccount() {
+        String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+        return accountRepo.findByUserName(userName);
+    }
+
+    @GetMapping("/manager/account")
+    public Account getManagerAccount() {
+        String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+        return accountRepo.findByUserName(userName);
+    }
 
     @PostMapping("/customer/buy")
     public ResponseEntity<String> buyCart(
@@ -364,4 +387,5 @@ public class AwaBackendController {
         return new ResponseEntity<>(urlJson, HttpStatus.OK);
     }
 
+    // OLD END
 }
