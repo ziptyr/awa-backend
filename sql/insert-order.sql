@@ -1,16 +1,10 @@
 -- insert general order information
 -- order date will be set to the 
 -- current date. set total to 0
-<<<<<<< HEAD
 INSERT INTO orders(order_id,restaurant_id, user_name, order_status, order_date, total, delivery_address)
 VALUES (
     2222,  -- value from select statment above
     1,
-=======
-INSERT INTO orders VALUES (
-    'order111',
-    'abcdef',
->>>>>>> main
     'moritz',
     0,
     current_date,
@@ -40,12 +34,8 @@ SET total = (
     FROM orders_products
     WHERE order_id = 'order111'
 )
-<<<<<<< HEAD
 WHERE order_id = 1;
 -- If the delivery address is not the users home address
 UPDATE orders 
 SET delivery_address = 'Adlerweg 12, Zürich' 
 WHERE order_id = 1;
-=======
-WHERE order_id = 'order111';
->>>>>>> main
