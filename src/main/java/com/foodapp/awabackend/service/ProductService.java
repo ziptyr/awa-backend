@@ -1,12 +1,9 @@
 package com.foodapp.awabackend.service;
 
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
-import com.foodapp.awabackend.data.OrdersProducts;
 import com.foodapp.awabackend.data.Product;
-import com.foodapp.awabackend.repo.OrdersProductsRepo;
 import com.foodapp.awabackend.repo.ProductRepo;
 
 import org.springframework.beans.factory.annotation.Autowired;
