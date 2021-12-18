@@ -20,6 +20,7 @@ import com.foodapp.awabackend.data.Role;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.foodapp.awabackend.data.Account;
+import com.foodapp.awabackend.data.Order;
 import com.foodapp.awabackend.data.Restaurant;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -101,6 +102,12 @@ public class AwaBackendController {
         return accountService.findByUserName(userName);
     }
 
+    @GetMapping("/customer/orders")
+    public List<Order> getOrders() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        return orderService.findByUserName(username);
+    }
+
     @GetMapping("/manager/account")
     public Account getManagerAccount() {
         String userName = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -115,13 +122,6 @@ public class AwaBackendController {
     // REDONE END
 
     // OLD
-
-    //@GetMapping("/customer/orders")
-    //public ResponseEntity<List<Order>> getOrders() {
-    //    String username = SecurityContextHolder.getContext().getAuthentication().getName();
-    //   List<Order> res = orderRepo.getOrdersByUsername(username);
-    //   return new ResponseEntity<List<Order>>(res, HttpStatus.OK);
-    //}
 
     //@GetMapping("/customer/orders/{orderId}")
     //public ResponseEntity<Map<String,Object>> getOrder(@PathVariable long orderId) {
