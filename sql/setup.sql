@@ -5,8 +5,9 @@ create table users (
     user_name VARCHAR(50) NOT NULL PRIMARY KEY,
     address VARCHAR(50) NOT NULL,
     manager BOOLEAN NOT NULL,
-    password_hash VARCHAR(60) NOT NULL
+    password_hash VARCHAR(250) NOT NULL
 );
+
 create table restaurants (
     restaurant_id INT NOT NULL PRIMARY KEY DEFAULT NEXTVAL('restaurant_pk_seq'),
     restaurant_name VARCHAR(50) NOT NULL,
@@ -18,6 +19,7 @@ create table restaurants (
     type VARCHAR(20) NOT NULL,
     image VARCHAR(100) NOT NULL
 );
+
 create table products (
     product_id INT NOT NULL PRIMARY KEY DEFAULT NEXTVAL('product_pk_seq'),
     restaurant_id INT REFERENCES restaurants (restaurant_id),
@@ -27,6 +29,7 @@ create table products (
     image VARCHAR(100),
     categories VARCHAR(100)
 );
+
 create table orders (
     order_id INT NOT NULL PRIMARY KEY DEFAULT NEXTVAL('product_pk_seq'),
     restaurant_id INT REFERENCES restaurants (restaurant_id),
@@ -35,6 +38,7 @@ create table orders (
     order_date DATE NOT NULL,
     total NUMERIC NOT NULL
 );
+
 create table orders_products (
     order_id INT REFERENCES orders (order_id),
     product_id INT REFERENCES products (product_id),
