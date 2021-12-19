@@ -28,6 +28,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -65,10 +66,16 @@ public class AwaBackendController {
     // REDONE
 
     @PostMapping("/public/users")
-    public String createUser(@RequestBody Account newUser) {
-        newUser.encodePassword();
-        accountService.save(newUser);
-        return "CREATED";
+    public void createUser(@RequestBody Map<String, String> account) {
+        BCryptPasswordEncoder pwEncoder = new BCryptPasswordEncoder();
+        accountService.save(
+            new Account(
+                account.get("username"),
+                account.get("address"),
+                Role.valueOf(account.get("role")),
+                pwEncoder.encode(account.get("password"))
+            )
+        );
     }
 
     @GetMapping("/public/restaurants")
@@ -134,7 +141,18 @@ public class AwaBackendController {
     }
 
     @PostMapping("/manager/restaurants")
-    public Restaurant createRestaurant(@RequestBody Restaurant restaurant) {
+    public Restaurant createRestaurant(@RequestBody Map<String, String> restaurantData) {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        Restaurant restaurant = new Restaurant(
+                restaurantData.get("restaurantName"),
+                username,
+                restaurantData.get("restaurantAddress"),
+                restaurantData.get("opens"),
+                restaurantData.get("closes"),
+                restaurantData.get("image"),
+                restaurantData.get("type"),
+                restaurantData.get("priceLevel")
+            );
         restaurantService.save(restaurant);
         return restaurant;
     }

@@ -9,8 +9,6 @@ import javax.persistence.Enumerated;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
 @Entity
 @Table(name="users")
 public class Account implements Serializable {
@@ -31,10 +29,17 @@ public class Account implements Serializable {
 
     Account() {}
 
-    public void encodePassword() {
-        BCryptPasswordEncoder pwEncoder = new BCryptPasswordEncoder();
-        this.password = pwEncoder.encode(this.password);
+    public Account(String username, String address, Role role, String password) {
+        this.username = username;
+        this.address = address;
+        this.role = role;
+        this.password = password;
     }
+
+    //public void encodePassword() {
+    //    BCryptPasswordEncoder pwEncoder = new BCryptPasswordEncoder();
+    //    this.password = pwEncoder.encode(this.password);
+    //}
 
     public String getUsername() {
         return username;

@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -12,6 +14,7 @@ import javax.persistence.Table;
 public class Restaurant implements Serializable {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "restaurant_id")
     private long restaurantId;
 
@@ -43,6 +46,26 @@ public class Restaurant implements Serializable {
     // private Set<Product> menu;
 
     Restaurant() {}
+
+    public Restaurant(
+        String restaurantName,
+        String managerName,
+        String restaurantAddress,
+        String opens,
+        String closes,
+        String image,
+        String type,
+        String priceLevel
+    ) {
+        this.restaurantName = restaurantName;
+        this.managerName = managerName;
+        this.restaurantAddress = restaurantAddress;
+        this.opens = opens;
+        this.closes = closes;
+        this.image = image;
+        this.type = type;
+        this.priceLevel = Long.parseLong(priceLevel);
+    }
 
     public long getRestaurantId() {
         return restaurantId;
