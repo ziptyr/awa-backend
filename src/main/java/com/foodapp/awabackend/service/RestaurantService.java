@@ -1,6 +1,7 @@
 package com.foodapp.awabackend.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.foodapp.awabackend.data.Restaurant;
 import com.foodapp.awabackend.repo.RestaurantRepo;
@@ -26,7 +27,38 @@ public class RestaurantService {
         return restaurantRepo.findByManagerName(userName);
     }
 
-    public void save(Restaurant restaurant) {
+    public Restaurant save(Map<String, String> restaurantData) {
+        Restaurant restaurant = new Restaurant(
+                restaurantData.get("restaurantName"),
+                restaurantData.get("managerName"),
+                restaurantData.get("restaurantAddress"),
+                restaurantData.get("opens"),
+                restaurantData.get("closes"),
+                restaurantData.get("image"),
+                restaurantData.get("type"),
+                restaurantData.get("priceLevel")
+            );
+
         restaurantRepo.save(restaurant);
+        return restaurant;
+    }
+
+    public Restaurant updateRestaurant(Map<String, String> restaurantData) {
+
+        Restaurant restaurant = this.findById(
+            Long.parseLong(restaurantData.get("restaurantId")));
+
+        if (restaurant == null) return null;
+
+        restaurant.setRestaurantName(restaurantData.get("restaurantName"));
+        restaurant.setRestaurantAddress(restaurantData.get("restaurantAddress"));
+        restaurant.setOpens(restaurantData.get("opens"));
+        restaurant.setCloses(restaurantData.get("closes"));
+        restaurant.setImage(restaurantData.get("image"));
+        restaurant.setType(restaurantData.get("type"));
+        restaurant.setPriceLevel(Long.parseLong(restaurantData.get("priceLevel")));
+
+        restaurantRepo.flush();
+        return restaurant;
     }
 }
