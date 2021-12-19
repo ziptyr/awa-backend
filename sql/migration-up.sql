@@ -41,7 +41,8 @@ create table orders (
     order_status SMALLINT NOT NULL,
     order_date DATE NOT NULL,
     total NUMERIC NOT NULL,
-    delivery_address VARCHAR(255) Not NULL
+    delivery_address VARCHAR(255) Not NULL,
+    eta VARCHAR(5) Not NULL
 );
 
 create table orders_products (
