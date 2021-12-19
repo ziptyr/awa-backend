@@ -141,6 +141,11 @@ public class AwaBackendController {
         return accountService.findByUsername(username);
     }
 
+    @GetMapping("/manager/restaurants")
+    public List<Restaurant> getManagersRestaurants() {
+        return restaurantService.findByManagerName(this.getUsername());
+    }
+
     @PostMapping("/manager/restaurants")
     public Restaurant createRestaurant(@RequestBody Map<String, String> restaurantData) {
         restaurantData.put("managerName", this.getUsername());
@@ -154,17 +159,11 @@ public class AwaBackendController {
 
     @GetMapping("/manager/restaurants/orders")
     public List<Order> getManagersOrders() {
-        return orderService.findByUsername(this.getUsername());
+        return orderService.findByManagerName(this.getUsername());
     }
 
-    // REDONE END
-
-    // OLD
-
-    //@PostMapping("/manager/restaurants/{restaurantId}/products")
-    //public ResponseEntity<String> createProduct(
-    //   @PathVariable long restaurantId, @RequestBody NewProduct np
-    //) {
+    @PostMapping("/manager/restaurants/products")
+    public Restaurant createProduct(@RequestBody Map<String, String> newProduct) {
     //    String manager = SecurityContextHolder.getContext().getAuthentication().getName();
     //    // Check if user is manager of restaurantId
     //    Optional<Restaurant> restaurant = restaurantRepo.findById(restaurantId);
@@ -177,7 +176,12 @@ public class AwaBackendController {
     //    // specified in the request path
     //    productRepo.createProduct(restaurantId, np.name, np.description, np.price, np.image, np.category);
     //    return new ResponseEntity<>("CREATED",HttpStatus.CREATED);
-    //}
+        return null;
+    }
+
+    // REDONE END
+
+    // OLD
 
     //@GetMapping("/manager/restaurant/orders/{orderId}")
     //public ResponseEntity<Map<String,Object>> getOrderAsManager(@PathVariable long orderId) {
