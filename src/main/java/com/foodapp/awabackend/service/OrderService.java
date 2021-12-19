@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 import com.foodapp.awabackend.data.Order;
 import com.foodapp.awabackend.data.OrdersProducts;
 import com.foodapp.awabackend.data.Product;
-import com.foodapp.awabackend.data.Restaurant;
 import com.foodapp.awabackend.repo.OrderRepo;
 import com.foodapp.awabackend.repo.OrdersProductsRepo;
 
@@ -29,6 +28,9 @@ public class OrderService {
 
     @Autowired
     RestaurantService restaurantService;
+
+    @Autowired
+    AccountService accountService;
 
     public Order findById(Long orderId) {
         return orderRepo.findById(orderId).orElse(null);
@@ -100,5 +102,15 @@ public class OrderService {
         order.put("productDetails", productDetails);
 
         return order;
+    }
+
+    public Order buy(Order order, String username) {
+        order.setUsername(username);
+
+        if (order.getDeliveryAddress() == "") {
+            order.setDeliveryAddress(accountService.findByUsername(username).getAddress());
+        }
+
+        return orderRepo.save(order);
     }
 }
