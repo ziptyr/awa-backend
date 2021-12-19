@@ -55,10 +55,6 @@ public class AwaBackendController {
     @Autowired
     RestaurantService restaurantService;
 
-    private String getUsername() {
-        return SecurityContextHolder.getContext().getAuthentication().getName();
-    }
-
     @GetMapping("/")
     public ResponseEntity<HttpHeaders> redirectToApiDocumentation() throws URISyntaxException{
         URI externalUri = new URI("https://awa-food-app.stoplight.io/docs/awa-food-app-api/YXBpOjI4OTEwMDQ1-awa-food-api");
@@ -70,17 +66,15 @@ public class AwaBackendController {
 
     // REDONE
 
+    private String getUsername() {
+        return SecurityContextHolder.getContext().getAuthentication().getName();
+    }
+
     @PostMapping("/public/users")
-    public void createUser(@RequestBody Map<String, String> account) {
+    public void createUser(@RequestBody Account account) {
         BCryptPasswordEncoder pwEncoder = new BCryptPasswordEncoder();
-        accountService.save(
-            new Account(
-                account.get("username"),
-                account.get("address"),
-                Role.valueOf(account.get("role")),
-                pwEncoder.encode(account.get("password"))
-            )
-        );
+        account.setPassword(pwEncoder.encode(account.getPassword()));
+        accountService.save(account);
     }
 
     @GetMapping("/public/restaurants")
@@ -108,24 +102,10 @@ public class AwaBackendController {
         return accountService.findByUsername(this.getUsername());
     }
 
-    //@PutMapping("/customer/orders/{orderId}/confirm")
-    //public ResponseEntity<String> confirmOrder(@PathVariable long orderId) {
-    //    // username static for now, extract from jwt later
-    //    String username = SecurityContextHolder.getContext().getAuthentication().getName();
-    //    Optional<Order> order = orderRepo.findById(orderId);
-    //    // if no order for orderId can be found return 404
-    //    if (!order.isPresent()){
-    //        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-    //    }
-    //    // if order does not belong to order or 
-    //    // order has not been marked as delivered by manager
-    //    // return 403
-    //    if(!order.get().username.equals(username) || order.get().orderStatus != 3){
-    //        return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
-    //    }
-    //    orderRepo.updateOrderStatus(4, orderId);
-    //    return new ResponseEntity<>("delivery confirmed", HttpStatus.OK);
-    //}
+    @PutMapping("/customer/orders/confirm")
+    public Order confirmOrder(@RequestBody Long orderId) {
+        return orderService.confirm(orderId, this.getUsername());
+    }
 
     @GetMapping("/customer/orders")
     public List<Order> getOrders() {
@@ -171,32 +151,6 @@ public class AwaBackendController {
     @PutMapping("/manager/restaurants/orders")
     public Order updateOrder(@RequestBody Map<String, String> update) {
         return orderService.update(update, this.getUsername());
-    //public ResponseEntity<String> updateOrderStatus(
-    //   @PathVariable long orderId, @RequestBody OrderUpdate update
-    //) {
-    //    String manager = SecurityContextHolder.getContext().getAuthentication().getName();
-    //    // Check if user is manager of restaurantId
-    //    Optional<Order> order = orderRepo.findById(orderId);
-    //    if (!order.isPresent()){
-    //        return new ResponseEntity<>("ORDER NOT FOUND", HttpStatus.NOT_FOUND);
-    //    }
-    //    // Check if user is manager of restaurantId from order
-    //    Optional<Restaurant> restaurant = restaurantRepo.findById(order.get().restaurantId);
-    //    if(restaurant.isPresent()){
-    //        if(!restaurant.get().managerName.equals(manager)){
-    //            return new ResponseEntity<>("User does not own corresponding restaurant",HttpStatus.FORBIDDEN);
-    //        }
-    //    } else {
-    //        // Invalid restaurantId
-    //        return new ResponseEntity<>("RESTAURANT NOT FOUND", HttpStatus.BAD_REQUEST);
-    //    }
-    //    // if all is okay set order status and optionally update eta
-    //    orderRepo.updateOrderStatus(update.status, orderId);
-    //    // only if eta is set in request body
-    //    if(update.eta.isPresent()){
-    //        orderRepo.updateEta(update.eta.get(), orderId);
-    //    }
-    //    return new ResponseEntity<>("Order status updated", HttpStatus.OK);
     }
 
     // REDONE END
