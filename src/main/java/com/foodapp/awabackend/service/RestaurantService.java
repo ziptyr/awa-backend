@@ -28,20 +28,8 @@ public class RestaurantService {
         return restaurantRepo.findByManagerName(userName);
     }
 
-    public Restaurant save(Map<String, String> restaurantData) {
-        Restaurant restaurant = new Restaurant(
-                restaurantData.get("restaurantName"),
-                restaurantData.get("managerName"),
-                restaurantData.get("restaurantAddress"),
-                restaurantData.get("opens"),
-                restaurantData.get("closes"),
-                restaurantData.get("image"),
-                Type.valueOf(restaurantData.get("type")),
-                restaurantData.get("priceLevel")
-            );
-
-        restaurantRepo.save(restaurant);
-        return restaurant;
+    public Restaurant save(Restaurant restaurant) {
+        return restaurantRepo.save(restaurant);
     }
 
     public Restaurant updateRestaurant(Map<String, String> restaurantData) {
