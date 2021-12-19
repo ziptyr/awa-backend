@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import com.foodapp.awabackend.data.Order;
 import com.foodapp.awabackend.data.OrdersProducts;
 import com.foodapp.awabackend.data.Product;
+import com.foodapp.awabackend.data.Restaurant;
 import com.foodapp.awabackend.repo.OrderRepo;
 import com.foodapp.awabackend.repo.OrdersProductsRepo;
 
@@ -26,8 +27,19 @@ public class OrderService {
     @Autowired
     ProductService productService;
 
+    @Autowired
+    RestaurantService restaurantService;
+
     public List<Order> findByUsername(String username) {
         return orderRepo.findByUsername(username);
+    }
+
+    public List<Order> findByManagerName(String username) {
+        return restaurantService.findByManagerName(username)
+            .stream()
+            .map(restaurant -> orderRepo.findByRestaurantId(restaurant.getRestaurantId()))
+            .flatMap(List::stream)
+            .collect(Collectors.toList());
     }
 
     public Map<String, Object> getOrder(long orderId) {
