@@ -23,7 +23,7 @@ public class AccountService {
         return accountRepo.findUsersByRole(role);
     }
 
-    public void save(Account account) {
-        accountRepo.save(account);
+    public Account save(Account account) {
+        return accountRepo.save(account);
     }
 }
