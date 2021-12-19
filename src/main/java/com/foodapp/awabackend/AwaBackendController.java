@@ -54,6 +54,10 @@ public class AwaBackendController {
     @Autowired
     RestaurantService restaurantService;
 
+    private String getUsername() {
+        return SecurityContextHolder.getContext().getAuthentication().getName();
+    }
+
     @GetMapping("/")
     public ResponseEntity<HttpHeaders> redirectToApiDocumentation() throws URISyntaxException{
         URI externalUri = new URI("https://awa-food-app.stoplight.io/docs/awa-food-app-api/YXBpOjI4OTEwMDQ1-awa-food-api");
@@ -157,6 +161,33 @@ public class AwaBackendController {
         return restaurant;
     }
 
+    @PutMapping("/manager/restaurants")
+    public Restaurant updateRestaurant(@RequestBody Map<String, String> restaurantData) {
+        Restaurant restaurant = restaurantService.findById(
+            Long.parseLong(restaurantData.get("restaurantId")));
+
+        //if(restaurant.isEmpty()){
+        //    return new ResponseEntity<>("Restaurant with id does not exist", HttpStatus.NOT_FOUND);
+        //}
+        //// if restaurant exists check if it manager is authorized to make changes
+        //if(!restaurant.get().getManagerName().equals(manager)){
+        //    return new ResponseEntity<>(HttpStatus.FORBIDDEN.toString(), HttpStatus.FORBIDDEN);
+        //}
+
+        //restaurantService.updateRestaurant(r.restaurantName,
+        //                                r.address,
+        //                                r.opens,
+        //                                r.closes,
+        //                                r.image,
+        //                                r.type,
+        //                                r.priceLevel,
+        //                                id);
+
+        //return new ResponseEntity<>(HttpStatus.OK.toString(), HttpStatus.OK);
+
+        return null;
+    }
+
     // REDONE END
 
     // OLD
@@ -167,36 +198,6 @@ public class AwaBackendController {
     //    List<Restaurant> restaurants = restaurantRepo.getByManager(manager);
 
     //    return new ResponseEntity<>(restaurants, HttpStatus.OK);
-    //}
-
-    //@PutMapping("/manager/restaurants/{id}")
-    //public ResponseEntity<String> updateRestaurant(
-    //        @PathVariable long id,
-    //        @RequestBody NewRestaurant r
-    //    ){
-    //    // Get managers name from jwt
-    //    String manager = SecurityContextHolder.getContext().getAuthentication().getName();
-    //    // Check if restaurant with id exists
-    //    Optional<Restaurant> restaurant = restaurantRepo.findById(id);
-    //    if(restaurant.isEmpty()){
-    //        return new ResponseEntity<>("Restaurant with id does not exist", HttpStatus.NOT_FOUND);
-    //    }
-    //    // if restaurant exists check if it manager is authorized to make changes
-    //    if(!restaurant.get().getManagerName().equals(manager)){
-    //        return new ResponseEntity<>(HttpStatus.FORBIDDEN.toString(), HttpStatus.FORBIDDEN);
-    //    }
-
-    //    restaurantRepo.updateRestaurant(r.restaurantName,
-    //                                    r.address,
-    //                                    r.opens,
-    //                                    r.closes,
-    //                                    r.image,
-    //                                    r.type,
-    //                                    r.priceLevel,
-    //                                    id);
-
-
-    //    return new ResponseEntity<>(HttpStatus.OK.toString(), HttpStatus.OK);
     //}
 
     //@GetMapping("/manager/restaurants/{restaurantId}/orders")
