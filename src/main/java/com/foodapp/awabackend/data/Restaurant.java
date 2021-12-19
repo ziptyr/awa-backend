@@ -86,6 +86,10 @@ public class Restaurant implements Serializable {
         return managerName;
     }
 
+    public void setManagerName(String managerName) {
+        this.managerName = managerName;
+    }
+
     public String getRestaurantAddress() {
         return restaurantAddress;
     }
