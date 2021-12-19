@@ -104,8 +104,7 @@ public class AwaBackendController {
 
     @GetMapping("/customer/account")
     public Account getCustomerAccount() {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        return accountService.findByUsername(username);
+        return accountService.findByUsername(this.getUsername());
     }
 
     //@PutMapping("/customer/orders/{orderId}/confirm")
@@ -129,14 +128,12 @@ public class AwaBackendController {
 
     @GetMapping("/customer/orders")
     public List<Order> getOrders() {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        return orderService.findByUsername(username);
+        return orderService.findByUsername(this.getUsername());
     }
 
     @GetMapping("/manager/account")
     public Account getManagerAccount() {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        return accountService.findByUsername(username);
+        return accountService.findByUsername(this.getUsername());
     }
 
     @GetMapping("/manager/customer/{username}")
@@ -146,74 +143,23 @@ public class AwaBackendController {
 
     @PostMapping("/manager/restaurants")
     public Restaurant createRestaurant(@RequestBody Map<String, String> restaurantData) {
-        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        Restaurant restaurant = new Restaurant(
-                restaurantData.get("restaurantName"),
-                username,
-                restaurantData.get("restaurantAddress"),
-                restaurantData.get("opens"),
-                restaurantData.get("closes"),
-                restaurantData.get("image"),
-                restaurantData.get("type"),
-                restaurantData.get("priceLevel")
-            );
-        restaurantService.save(restaurant);
-        return restaurant;
+        restaurantData.put("managerName", this.getUsername());
+        return restaurantService.save(restaurantData);
     }
 
     @PutMapping("/manager/restaurants")
     public Restaurant updateRestaurant(@RequestBody Map<String, String> restaurantData) {
-        Restaurant restaurant = restaurantService.findById(
-            Long.parseLong(restaurantData.get("restaurantId")));
+        return restaurantService.updateRestaurant(restaurantData);
+    }
 
-        //if(restaurant.isEmpty()){
-        //    return new ResponseEntity<>("Restaurant with id does not exist", HttpStatus.NOT_FOUND);
-        //}
-        //// if restaurant exists check if it manager is authorized to make changes
-        //if(!restaurant.get().getManagerName().equals(manager)){
-        //    return new ResponseEntity<>(HttpStatus.FORBIDDEN.toString(), HttpStatus.FORBIDDEN);
-        //}
-
-        //restaurantService.updateRestaurant(r.restaurantName,
-        //                                r.address,
-        //                                r.opens,
-        //                                r.closes,
-        //                                r.image,
-        //                                r.type,
-        //                                r.priceLevel,
-        //                                id);
-
-        //return new ResponseEntity<>(HttpStatus.OK.toString(), HttpStatus.OK);
-
-        return null;
+    @GetMapping("/manager/restaurants/orders")
+    public List<Order> getManagersOrders() {
+        return orderService.findByUsername(this.getUsername());
     }
 
     // REDONE END
 
     // OLD
-
-    //@GetMapping("/manager/restaurants")
-    //public ResponseEntity<List<Restaurant>> getManagerRestaurants() {
-    //    String manager = SecurityContextHolder.getContext().getAuthentication().getName();
-    //    List<Restaurant> restaurants = restaurantRepo.getByManager(manager);
-
-    //    return new ResponseEntity<>(restaurants, HttpStatus.OK);
-    //}
-
-    //@GetMapping("/manager/restaurants/{restaurantId}/orders")
-    //public ResponseEntity<List<Order>> getRestaurantsOrders(@PathVariable long restaurantId) {
-    //    String manager = SecurityContextHolder.getContext().getAuthentication().getName();
-    //    // Check if user is manager of restaurantId
-    //    Optional<Restaurant> restaurant = restaurantRepo.findById(restaurantId);
-    //    if(!restaurant.isPresent()) {
-    //        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-    //    } else if (!restaurant.get().getManagerName().equals(manager)) {
-    //        return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
-    //    }
-
-    //    List<Order> orders = orderRepo.getOrdersByRestaurantId(restaurantId);
-    //    return new ResponseEntity<>(orders, HttpStatus.OK);
-    //}
 
     //@GetMapping("/manager/restaurants/{restaurantId}/orders/new")
     //public ResponseEntity<List<Order>> getNewOrders(@PathVariable long restaurantId) {
