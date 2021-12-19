@@ -32,12 +32,13 @@ public class RestaurantService {
         return restaurantRepo.save(restaurant);
     }
 
-    public Restaurant updateRestaurant(Map<String, String> restaurantData) {
-
+    public Restaurant update(Map<String, String> restaurantData, String managerName) {
         Restaurant restaurant = this.findById(
             Long.parseLong(restaurantData.get("restaurantId")));
 
-        if (restaurant == null) return null;
+        if ( restaurant == null || restaurant.getManagerName() != managerName) {
+            return null;
+        }
 
         restaurant.setRestaurantName(restaurantData.get("restaurantName"));
         restaurant.setRestaurantAddress(restaurantData.get("restaurantAddress"));
