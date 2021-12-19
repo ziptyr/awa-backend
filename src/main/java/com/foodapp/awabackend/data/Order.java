@@ -2,6 +2,7 @@ package com.foodapp.awabackend.data;
 
 
 import java.io.Serializable;
+import java.time.LocalDate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -30,7 +31,7 @@ public class Order implements Serializable {
     private int orderStatus;
 
     @Column(name = "order_date")
-    private String orderDate;
+    private LocalDate orderDate;
 
     @Column(name = "total")
     private double total;
@@ -42,6 +43,34 @@ public class Order implements Serializable {
     private String eta;
 
     Order() {}
+
+    //public Order(long restaurantId, int orderStatus, double total) {
+    //    this.restaurantId = restaurantId;
+    //    this.orderStatus = orderStatus;
+    //    this.total = total;
+    //    this.deliveryAddress = "";
+    //    this.orderDate = LocalDate.now();
+    //    this.eta = "0:00";
+    //}
+
+    //public Order(long restaurantId, int orderStatus, double total, String deliveryAdString) {
+    //    this(restaurantId, orderStatus, total);
+    //    this.setDeliveryAddress(deliveryAddress);
+    //}
+
+    @Override
+    public String toString() {
+        return "Order: ("
+            + this.orderId
+            + " " + this.restaurantId
+            + " " + this.username
+            + " " + this.orderStatus
+            + " " + this.orderDate
+            + " " + this.total
+            + " " + this.deliveryAddress
+            + " " + this.eta
+            + ")";
+    }
 
     public long getOrderId() {
         return orderId;
@@ -55,6 +84,10 @@ public class Order implements Serializable {
         return username;
     }
 
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
     public int getOrderStatus() {
         return orderStatus;
     }
@@ -63,11 +96,11 @@ public class Order implements Serializable {
         this.orderStatus = orderStatus;
     }
 
-    public String getOrderDate() {
+    public LocalDate getOrderDate() {
         return orderDate;
     }
 
-    public void setOrderDate(String orderDate) {
+    public void setOrderDate(LocalDate orderDate) {
         this.orderDate = orderDate;
     }
 
