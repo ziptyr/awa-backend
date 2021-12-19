@@ -62,6 +62,18 @@ public class OrderService {
         return order;
     }
 
+    public Order confirm(Long orderId, String username) {
+        Order order = this.findByUsername(username)
+            .stream()
+            .filter(o -> o.getOrderId() == orderId)
+            .findFirst()
+            .orElse(null);
+
+        order.setOrderStatus(4);
+        orderRepo.flush();
+        return order;
+    }
+
     public Map<String, Object> getOrder(long orderId) {
         Map<String, Object> order = new HashMap<>();
 
