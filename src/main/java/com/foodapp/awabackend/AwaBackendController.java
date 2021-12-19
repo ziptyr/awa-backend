@@ -161,20 +161,6 @@ public class AwaBackendController {
 
     // OLD
 
-    //@GetMapping("/manager/restaurants/{restaurantId}/orders/new")
-    //public ResponseEntity<List<Order>> getNewOrders(@PathVariable long restaurantId) {
-    //    String manager = SecurityContextHolder.getContext().getAuthentication().getName();
-    //    // Check if user is manager of restaurantId
-    //    Optional<Restaurant> restaurant = restaurantRepo.findById(restaurantId);
-    //    if(!restaurant.isPresent()) {
-    //        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-    //    } else if (!restaurant.get().getManagerName().equals(manager)) {
-    //        return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
-    //    }
-    //    List<Order> orders = orderRepo.getNewOrdersByRestaurantId(restaurantId);
-    //    return new ResponseEntity<>(orders, HttpStatus.OK);
-    //}
-
     //@PostMapping("/manager/restaurants/{restaurantId}/products")
     //public ResponseEntity<String> createProduct(
     //   @PathVariable long restaurantId, @RequestBody NewProduct np
