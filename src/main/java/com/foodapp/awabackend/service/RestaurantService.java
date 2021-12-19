@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.foodapp.awabackend.data.Restaurant;
+import com.foodapp.awabackend.data.Type;
 import com.foodapp.awabackend.repo.RestaurantRepo;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +36,7 @@ public class RestaurantService {
                 restaurantData.get("opens"),
                 restaurantData.get("closes"),
                 restaurantData.get("image"),
-                restaurantData.get("type"),
+                Type.valueOf(restaurantData.get("type")),
                 restaurantData.get("priceLevel")
             );
 
@@ -55,7 +56,7 @@ public class RestaurantService {
         restaurant.setOpens(restaurantData.get("opens"));
         restaurant.setCloses(restaurantData.get("closes"));
         restaurant.setImage(restaurantData.get("image"));
-        restaurant.setType(restaurantData.get("type"));
+        restaurant.setType(Type.valueOf(restaurantData.get("type")));
         restaurant.setPriceLevel(Long.parseLong(restaurantData.get("priceLevel")));
 
         restaurantRepo.flush();

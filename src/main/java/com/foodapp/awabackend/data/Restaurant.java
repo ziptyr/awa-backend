@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -37,7 +39,8 @@ public class Restaurant implements Serializable {
     private String image;
 
     @Column(name = "type")
-    private String type;
+    @Enumerated(EnumType.STRING)
+    private Type type;
 
     @Column(name = "price_level")
     private long priceLevel;
@@ -54,7 +57,7 @@ public class Restaurant implements Serializable {
         String opens,
         String closes,
         String image,
-        String type,
+        Type type,
         String priceLevel
     ) {
         this.restaurantName = restaurantName;
@@ -115,11 +118,11 @@ public class Restaurant implements Serializable {
         this.image = image;
     }
 
-    public String getType() {
+    public Type getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(Type type) {
         this.type = type;
     }
 
