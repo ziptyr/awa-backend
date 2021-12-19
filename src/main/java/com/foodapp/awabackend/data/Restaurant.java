@@ -83,11 +83,11 @@ public class Restaurant implements Serializable {
         return managerName;
     }
 
-    public String getAddress() {
+    public String getRestaurantAddress() {
         return restaurantAddress;
     }
 
-    public void setAddress(String restaurantAddress) {
+    public void setRestaurantAddress(String restaurantAddress) {
         this.restaurantAddress = restaurantAddress;
     }
 
