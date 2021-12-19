@@ -155,7 +155,7 @@ public class AwaBackendController {
 
     @PutMapping("/manager/restaurants")
     public Restaurant updateRestaurant(@RequestBody Map<String, String> restaurantData) {
-        return restaurantService.updateRestaurant(restaurantData);
+        return restaurantService.update(restaurantData, this.getUsername());
     }
 
     @GetMapping("/manager/restaurants/orders")
@@ -165,51 +165,12 @@ public class AwaBackendController {
 
     @PostMapping("/manager/restaurants/products")
     public Restaurant createProduct(@RequestBody Product product) {
-    //    String manager = SecurityContextHolder.getContext().getAuthentication().getName();
-    //    // Check if user is manager of restaurantId
-    //    Optional<Restaurant> restaurant = restaurantRepo.findById(restaurantId);
-    //    if(!restaurant.isPresent()) {
-    //        return new ResponseEntity<>("RESTAURANT NOT FOUND",HttpStatus.NOT_FOUND);
-    //    } else if (!restaurant.get().getManagerName().equals(manager)) {
-    //        return new ResponseEntity<>("User does not own restaurant",HttpStatus.FORBIDDEN);
-    //    }
-    //    // make sure product is created for the restaurant 
-    //    // specified in the request path
-    //    productRepo.createProduct(restaurantId, np.name, np.description, np.price, np.image, np.category);
-    //    return new ResponseEntity<>("CREATED",HttpStatus.CREATED);
         return productService.save(product);
     }
 
-    // REDONE END
-
-    // OLD
-
-    //@GetMapping("/manager/restaurant/orders/{orderId}")
-    //public ResponseEntity<Map<String,Object>> getOrderAsManager(@PathVariable long orderId) {
-    //    String manager = SecurityContextHolder.getContext().getAuthentication().getName();
-    //    // Check if user is manager of restaurantId
-    //    Optional<Order> order = orderRepo.findById(orderId);
-    //    if (!order.isPresent()){
-    //        return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
-    //    }
-    //    // Check if user is manager of restaurantId from order
-    //    Optional<Restaurant> restaurant = restaurantRepo.findById(order.get().restaurantId);
-    //    if(restaurant.isPresent()){
-    //        if(!restaurant.get().managerName.equals(manager)){
-    //            return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
-    //        }
-    //    } else {
-    //        // Invalid restaurantId
-    //        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-    //    }
-    //    // if all is ok
-    //    Map<String,Object> res = new HashMap<>();
-    //    res.put("details", order.get());
-    //    res.put("products", orderProductRepo.getOrderProducts(orderId));
-    //    return new ResponseEntity<>(res, HttpStatus.OK);
-    //}
-
-    //@PutMapping("/manager/restaurants/orders/{orderId}")
+    @PutMapping("/manager/restaurants/orders")
+    public Order updateOrder(@RequestBody Map<String, String> update) {
+        return orderService.update(update, this.getUsername());
     //public ResponseEntity<String> updateOrderStatus(
     //   @PathVariable long orderId, @RequestBody OrderUpdate update
     //) {
@@ -235,10 +196,12 @@ public class AwaBackendController {
     //    if(update.eta.isPresent()){
     //        orderRepo.updateEta(update.eta.get(), orderId);
     //    }
-
-
     //    return new ResponseEntity<>("Order status updated", HttpStatus.OK);
-    //}
+    }
+
+    // REDONE END
+
+    // OLD
 
     //@PostMapping("/manager/image")
     //public ResponseEntity<Map<String,String>> uploadImage(@RequestParam("file") MultipartFile file){
