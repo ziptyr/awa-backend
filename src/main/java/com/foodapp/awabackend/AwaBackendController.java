@@ -21,6 +21,7 @@ import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.foodapp.awabackend.data.Account;
 import com.foodapp.awabackend.data.Order;
+import com.foodapp.awabackend.data.Product;
 import com.foodapp.awabackend.data.Restaurant;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -147,9 +148,9 @@ public class AwaBackendController {
     }
 
     @PostMapping("/manager/restaurants")
-    public Restaurant createRestaurant(@RequestBody Map<String, String> restaurantData) {
-        restaurantData.put("managerName", this.getUsername());
-        return restaurantService.save(restaurantData);
+    public Restaurant createRestaurant(@RequestBody Restaurant restaurant) {
+        restaurant.setManagerName(this.getUsername());
+        return restaurantService.save(restaurant);
     }
 
     @PutMapping("/manager/restaurants")
@@ -163,7 +164,7 @@ public class AwaBackendController {
     }
 
     @PostMapping("/manager/restaurants/products")
-    public Restaurant createProduct(@RequestBody Map<String, String> newProduct) {
+    public Restaurant createProduct(@RequestBody Product product) {
     //    String manager = SecurityContextHolder.getContext().getAuthentication().getName();
     //    // Check if user is manager of restaurantId
     //    Optional<Restaurant> restaurant = restaurantRepo.findById(restaurantId);
@@ -176,7 +177,7 @@ public class AwaBackendController {
     //    // specified in the request path
     //    productRepo.createProduct(restaurantId, np.name, np.description, np.price, np.image, np.category);
     //    return new ResponseEntity<>("CREATED",HttpStatus.CREATED);
-        return null;
+        return productService.save(product);
     }
 
     // REDONE END
