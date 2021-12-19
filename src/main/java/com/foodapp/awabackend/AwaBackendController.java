@@ -3,6 +3,7 @@ package com.foodapp.awabackend;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -64,8 +65,6 @@ public class AwaBackendController {
         return new ResponseEntity<>(httpHeaders, HttpStatus.SEE_OTHER);
     }
 
-    // REDONE
-
     private String getUsername() {
         return SecurityContextHolder.getContext().getAuthentication().getName();
     }
@@ -82,20 +81,18 @@ public class AwaBackendController {
         return restaurantService.findAll();
     }
 
-    //@PostMapping("/customer/buy")
-    //public String buyCart(@RequestBody Cart cart) {
-    //    String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+    @PostMapping("/customer/buy")
+    public Order buyCart(@RequestBody Order order) {
+        if (order.getDeliveryAddress() == null) {
+            order.setDeliveryAddress(
+                accountService.findByUsername(this.getUsername()).getAddress());
+        }
+        order.setUsername(this.getUsername());
+        order.setEta("0:00");
+        order.setOrderDate(LocalDate.now());
 
-    //    
-    ////    boolean success = cart.placeOrder(username, orderRepo, productRepo);
-
-    ////    if(success) {
-    ////        return new ResponseEntity<>("Order placed",HttpStatus.OK);
-    ////    } else {
-    ////        return new ResponseEntity<>("Order can only have products from one restaurant",HttpStatus.BAD_REQUEST);
-    ////    }
-    //    return null;
-    //}
+        return orderService.buy(order, this.getUsername());
+    }
 
     @GetMapping("/customer/account")
     public Account getCustomerAccount() {
@@ -153,10 +150,6 @@ public class AwaBackendController {
         return orderService.update(update, this.getUsername());
     }
 
-    // REDONE END
-
-    // OLD
-
     //@PostMapping("/manager/image")
     //public ResponseEntity<Map<String,String>> uploadImage(@RequestParam("file") MultipartFile file){
 
@@ -182,6 +175,4 @@ public class AwaBackendController {
     //    
     //    return new ResponseEntity<>(urlJson, HttpStatus.OK);
     //}
-
-    // OLD END
 }
