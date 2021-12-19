@@ -30,6 +30,10 @@ public class OrderService {
     @Autowired
     RestaurantService restaurantService;
 
+    public Order findById(Long orderId) {
+        return orderRepo.findById(orderId).orElse(null);
+    }
+
     public List<Order> findByUsername(String username) {
         return orderRepo.findByUsername(username);
     }
@@ -40,6 +44,22 @@ public class OrderService {
             .map(restaurant -> orderRepo.findByRestaurantId(restaurant.getRestaurantId()))
             .flatMap(List::stream)
             .collect(Collectors.toList());
+    }
+
+    public Order update(Map<String, String> orderData, String managerName) {
+        Order order = this.findByManagerName(managerName)
+            .stream()
+            .filter(o -> o.getRestaurantId() == Long.parseLong(orderData.get("restaurantName")))
+            .findFirst()
+            .orElse(null);
+
+        if (order == null) return null;
+
+        order.setOrderStatus(Integer.parseInt(orderData.get("orderData")));
+        order.setEta(orderData.get("eta"));
+
+        orderRepo.flush();
+        return order;
     }
 
     public Map<String, Object> getOrder(long orderId) {
