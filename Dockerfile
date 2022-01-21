@@ -1,3 +1,13 @@
+#FROM openjdk:17-jdk-alpine
+#VOLUME /tmp
+#ARG JAR_FILE
+#COPY ${JAR_FILE} /app.jar
+#ENTRYPOINT ["java","-jar","/app.jar"]
+
+#Build: docker build --build-arg JAR_FILE=target/*.jar -t foodapp/awabackend .
+#Run: docker run -p 8080:8080 foodapp/awabackend
+
+
 FROM openjdk:17-jdk-alpine as build
 WORKDIR /workspace/app
 
